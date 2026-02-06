@@ -43,11 +43,10 @@ const useEditorStore = create((set, get) => ({
     blur: 0
   },
 
-  // screenshot: null, // Removed global screenshot state
-
   // Unified elements system
   elements: [],
   selectedElementId: null,
+  selectedElementIds: [],
   clipboard: null,
 
   // Groups
@@ -58,9 +57,10 @@ const useEditorStore = create((set, get) => ({
   historyIndex: -1,
 
   // UI state
-
   showExportModal: false,
   showPropertiesSidebar: true,
+  showTemplateSidebar: false,
+  showShortcutsModal: false,
   toast: null,
 
   // Rulers & Guides
@@ -120,18 +120,15 @@ const useEditorStore = create((set, get) => ({
   },
 
   // ============ DEVICE ============
-  // ============ DEVICE ============
   setScreenshot: (screenshot) => {
     const { elements, selectedElementId } = get();
     const selectedElement = elements.find(el => el.id === selectedElementId);
 
     if (selectedElement && selectedElement.type === 'device') {
-      // Update selected device's screenshot
       get().updateElement(selectedElementId, { screenshot });
       get().saveState();
       get().showToastMessage('Đã cập nhật ảnh cho khung hình');
     } else {
-      // Create new device with screenshot
       const id = 'device-' + Date.now();
       const newDevice = {
         id,
@@ -148,7 +145,8 @@ const useEditorStore = create((set, get) => ({
 
       set((state) => ({
         elements: [...state.elements, newDevice],
-        selectedElementId: id
+        selectedElementId: id,
+        selectedElementIds: [id]
       }));
       get().saveState();
       get().showToastMessage('Đã tạo khung hình mới với ảnh');
@@ -164,15 +162,16 @@ const useEditorStore = create((set, get) => ({
       deviceType,
       scale: 85,
       shadow: 50,
-      x: 600, // Center-ish
-      y: 350, // Center-ish
+      x: 600,
+      y: 350,
       zIndex: get().elements.length,
       rotation: 0
     };
 
     set((state) => ({
       elements: [...state.elements, newDevice],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
     get().showToastMessage('Đã thêm thiết bị');
@@ -187,7 +186,8 @@ const useEditorStore = create((set, get) => ({
     };
     set((state) => ({
       elements: [...state.elements, newElement],
-      selectedElementId: newElement.id
+      selectedElementId: newElement.id,
+      selectedElementIds: [newElement.id]
     }));
     get().saveState();
   },
@@ -206,21 +206,63 @@ const useEditorStore = create((set, get) => ({
   },
 
   deleteElement: (id) => {
-    // Also remove from any groups
+    set((state) => {
+      const newSelectedIds = state.selectedElementIds.filter(eid => eid !== id);
+      return {
+        elements: state.elements.filter(el => el.id !== id),
+        selectedElementId: newSelectedIds[0] || null,
+        selectedElementIds: newSelectedIds,
+        groups: state.groups.map(g => ({
+          ...g,
+          elementIds: g.elementIds.filter(eid => eid !== id)
+        })).filter(g => g.elementIds.length > 1)
+      };
+    });
+    get().saveState();
+    get().showToastMessage('Đã xóa phần tử');
+  },
+
+  deleteSelectedElements: () => {
+    const { selectedElementIds } = get();
+    if (selectedElementIds.length === 0) return;
     set((state) => ({
-      elements: state.elements.filter(el => el.id !== id),
-      selectedElementId: state.selectedElementId === id ? null : state.selectedElementId,
+      elements: state.elements.filter(el => !selectedElementIds.includes(el.id)),
+      selectedElementId: null,
+      selectedElementIds: [],
       groups: state.groups.map(g => ({
         ...g,
-        elementIds: g.elementIds.filter(eid => eid !== id)
+        elementIds: g.elementIds.filter(eid => !selectedElementIds.includes(eid))
       })).filter(g => g.elementIds.length > 1)
     }));
     get().saveState();
     get().showToastMessage('Đã xóa phần tử');
   },
 
-  selectElement: (id) => set({ selectedElementId: id }),
-  deselectElement: () => set({ selectedElementId: null }),
+  selectElement: (id) => set({ selectedElementId: id, selectedElementIds: [id] }),
+  deselectElement: () => set({ selectedElementId: null, selectedElementIds: [] }),
+
+  toggleSelectElement: (id) => {
+    const { selectedElementIds } = get();
+    let newIds;
+    if (selectedElementIds.includes(id)) {
+      newIds = selectedElementIds.filter(eid => eid !== id);
+    } else {
+      newIds = [...selectedElementIds, id];
+    }
+    set({
+      selectedElementIds: newIds,
+      selectedElementId: newIds[0] || null
+    });
+  },
+
+  selectAllElements: () => {
+    const { elements } = get();
+    const allIds = elements.map(el => el.id);
+    set({
+      selectedElementIds: allIds,
+      selectedElementId: allIds[0] || null
+    });
+  },
 
   getSelectedElement: () => {
     const { elements, selectedElementId } = get();
@@ -297,13 +339,19 @@ const useEditorStore = create((set, get) => ({
 
   // ============ COPY/PASTE ============
   copyElement: () => {
-    const { selectedElementId, elements } = get();
-    if (!selectedElementId) return;
+    const { selectedElementIds, elements } = get();
+    if (selectedElementIds.length === 0) return;
 
-    const element = elements.find(el => el.id === selectedElementId);
-    if (element) {
-      set({ clipboard: JSON.parse(JSON.stringify(element)) });
-      get().showToastMessage('Đã sao chép');
+    if (selectedElementIds.length === 1) {
+      const element = elements.find(el => el.id === selectedElementIds[0]);
+      if (element) {
+        set({ clipboard: JSON.parse(JSON.stringify(element)) });
+        get().showToastMessage('Đã sao chép');
+      }
+    } else {
+      const selected = elements.filter(el => selectedElementIds.includes(el.id));
+      set({ clipboard: JSON.parse(JSON.stringify(selected)) });
+      get().showToastMessage(`Đã sao chép ${selected.length} phần tử`);
     }
   },
 
@@ -311,18 +359,26 @@ const useEditorStore = create((set, get) => ({
     const { clipboard, elements } = get();
     if (!clipboard) return;
 
-    const newId = `${clipboard.type}-${Date.now()}`;
-    const newElement = {
-      ...clipboard,
-      id: newId,
-      x: clipboard.x + 20,
-      y: clipboard.y + 20,
-      zIndex: elements.length
-    };
+    const items = Array.isArray(clipboard) ? clipboard : [clipboard];
+    const newElements = [];
+    const newIds = [];
+
+    items.forEach((item) => {
+      const newId = `${item.type}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      newElements.push({
+        ...item,
+        id: newId,
+        x: item.x + 20,
+        y: item.y + 20,
+        zIndex: elements.length + newElements.length
+      });
+      newIds.push(newId);
+    });
 
     set((state) => ({
-      elements: [...state.elements, newElement],
-      selectedElementId: newId
+      elements: [...state.elements, ...newElements],
+      selectedElementId: newIds[0],
+      selectedElementIds: newIds
     }));
     get().saveState();
     get().showToastMessage('Đã dán');
@@ -351,7 +407,8 @@ const useEditorStore = create((set, get) => ({
 
     set((state) => ({
       elements: [...state.elements, newText],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
   },
@@ -398,7 +455,8 @@ const useEditorStore = create((set, get) => ({
 
     set((state) => ({
       elements: [...state.elements, newShape],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
     get().showToastMessage('Đã thêm hình dạng');
@@ -422,7 +480,8 @@ const useEditorStore = create((set, get) => ({
 
     set((state) => ({
       elements: [...state.elements, newImage],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
     get().showToastMessage('Đã thêm hình ảnh');
@@ -453,7 +512,8 @@ const useEditorStore = create((set, get) => ({
 
     set((state) => ({
       elements: [...state.elements, newAnnotation],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
     get().showToastMessage('Đã thêm chú thích');
@@ -480,7 +540,8 @@ const useEditorStore = create((set, get) => ({
 
     set((state) => ({
       elements: [...state.elements, newIcon],
-      selectedElementId: id
+      selectedElementId: id,
+      selectedElementIds: [id]
     }));
     get().saveState();
     get().showToastMessage('Đã thêm biểu tượng');
@@ -510,44 +571,57 @@ const useEditorStore = create((set, get) => ({
     return groups.find(g => g.elementIds.includes(elementId)) || null;
   },
 
+  getGroupMembers: (elementId) => {
+    const { groups, elements } = get();
+    const group = groups.find(g => g.elementIds.includes(elementId));
+    if (!group) return [];
+    return elements.filter(el => group.elementIds.includes(el.id));
+  },
+
   // ============ ALIGN / DISTRIBUTE ============
   alignElements: (direction) => {
-    const { elements } = get();
-    if (elements.length < 2) return;
+    const { elements, selectedElementIds } = get();
+    const targetIds = selectedElementIds.length >= 2 ? selectedElementIds : elements.map(el => el.id);
+    const targets = elements.filter(el => targetIds.includes(el.id));
+    if (targets.length < 2) return;
 
-    const updated = [...elements];
-    switch (direction) {
-      case 'left': {
-        const minX = Math.min(...updated.map(el => el.x));
-        updated.forEach(el => { el.x = minX; });
-        break;
+    const updated = elements.map(el => {
+      if (!targetIds.includes(el.id)) return el;
+      const clone = { ...el };
+      switch (direction) {
+        case 'left': {
+          const minX = Math.min(...targets.map(t => t.x));
+          clone.x = minX;
+          break;
+        }
+        case 'center': {
+          const avgX = targets.reduce((sum, t) => sum + t.x + (t.width || 100) / 2, 0) / targets.length;
+          clone.x = avgX - (el.width || 100) / 2;
+          break;
+        }
+        case 'right': {
+          const maxRight = Math.max(...targets.map(t => t.x + (t.width || 100)));
+          clone.x = maxRight - (el.width || 100);
+          break;
+        }
+        case 'top': {
+          const minY = Math.min(...targets.map(t => t.y));
+          clone.y = minY;
+          break;
+        }
+        case 'middle': {
+          const avgY = targets.reduce((sum, t) => sum + t.y + (t.height || 50) / 2, 0) / targets.length;
+          clone.y = avgY - (el.height || 50) / 2;
+          break;
+        }
+        case 'bottom': {
+          const maxBottom = Math.max(...targets.map(t => t.y + (t.height || 50)));
+          clone.y = maxBottom - (el.height || 50);
+          break;
+        }
       }
-      case 'center': {
-        const avgX = updated.reduce((sum, el) => sum + el.x + (el.width || 100) / 2, 0) / updated.length;
-        updated.forEach(el => { el.x = avgX - (el.width || 100) / 2; });
-        break;
-      }
-      case 'right': {
-        const maxRight = Math.max(...updated.map(el => el.x + (el.width || 100)));
-        updated.forEach(el => { el.x = maxRight - (el.width || 100); });
-        break;
-      }
-      case 'top': {
-        const minY = Math.min(...updated.map(el => el.y));
-        updated.forEach(el => { el.y = minY; });
-        break;
-      }
-      case 'middle': {
-        const avgY = updated.reduce((sum, el) => sum + el.y + (el.height || 50) / 2, 0) / updated.length;
-        updated.forEach(el => { el.y = avgY - (el.height || 50) / 2; });
-        break;
-      }
-      case 'bottom': {
-        const maxBottom = Math.max(...updated.map(el => el.y + (el.height || 50)));
-        updated.forEach(el => { el.y = maxBottom - (el.height || 50); });
-        break;
-      }
-    }
+      return clone;
+    });
 
     set({ elements: updated });
     get().saveState();
@@ -555,26 +629,36 @@ const useEditorStore = create((set, get) => ({
   },
 
   distributeElements: (direction) => {
-    const { elements } = get();
-    if (elements.length < 3) return;
+    const { elements, selectedElementIds } = get();
+    const targetIds = selectedElementIds.length >= 3 ? selectedElementIds : elements.map(el => el.id);
+    const targets = elements.filter(el => targetIds.includes(el.id));
+    if (targets.length < 3) return;
 
-    const sorted = [...elements].sort((a, b) =>
+    const sorted = [...targets].sort((a, b) =>
       direction === 'horizontal' ? a.x - b.x : a.y - b.y
     );
 
+    const positionMap = {};
     if (direction === 'horizontal') {
       const first = sorted[0].x;
       const last = sorted[sorted.length - 1].x;
       const step = (last - first) / (sorted.length - 1);
-      sorted.forEach((el, i) => { el.x = first + step * i; });
+      sorted.forEach((el, i) => { positionMap[el.id] = { x: first + step * i }; });
     } else {
       const first = sorted[0].y;
       const last = sorted[sorted.length - 1].y;
       const step = (last - first) / (sorted.length - 1);
-      sorted.forEach((el, i) => { el.y = first + step * i; });
+      sorted.forEach((el, i) => { positionMap[el.id] = { y: first + step * i }; });
     }
 
-    set({ elements: sorted });
+    const updated = elements.map(el => {
+      if (positionMap[el.id]) {
+        return { ...el, ...positionMap[el.id] };
+      }
+      return el;
+    });
+
+    set({ elements: updated });
     get().saveState();
     get().showToastMessage('Đã phân bố đều');
   },
@@ -635,6 +719,7 @@ const useEditorStore = create((set, get) => ({
         groups: data.groups || [],
         guides: data.guides || [],
         selectedElementId: null,
+        selectedElementIds: [],
         history: [],
         historyIndex: -1
       });
@@ -671,7 +756,8 @@ const useEditorStore = create((set, get) => ({
         elements: parsed.elements || [],
         groups: parsed.groups || [],
         guides: parsed.guides || [],
-        selectedElementId: null
+        selectedElementId: null,
+        selectedElementIds: []
       });
       return true;
     } catch {
@@ -712,7 +798,8 @@ const useEditorStore = create((set, get) => ({
       set({
         ...savedState,
         historyIndex: newIndex,
-        selectedElementId: null
+        selectedElementId: null,
+        selectedElementIds: []
       });
       get().showToastMessage('Hoàn tác');
     }
@@ -726,7 +813,8 @@ const useEditorStore = create((set, get) => ({
       set({
         ...savedState,
         historyIndex: newIndex,
-        selectedElementId: null
+        selectedElementId: null,
+        selectedElementIds: []
       });
       get().showToastMessage('Làm lại');
     }
@@ -741,10 +829,115 @@ const useEditorStore = create((set, get) => ({
   // ============ SIDEBAR TOGGLE ============
   togglePropertiesSidebar: () => set((state) => ({ showPropertiesSidebar: !state.showPropertiesSidebar })),
   setShowPropertiesSidebar: (show) => set({ showPropertiesSidebar: show }),
+  toggleTemplateSidebar: () => set((state) => ({ showTemplateSidebar: !state.showTemplateSidebar })),
+  setShowTemplateSidebar: (show) => set({ showTemplateSidebar: show }),
+
+  // ============ SHORTCUTS MODAL ============
+  setShowShortcutsModal: (show) => set({ showShortcutsModal: show }),
+
+  // ============ DUPLICATE ============
+  duplicateElement: () => {
+    const { selectedElementIds, elements } = get();
+    if (selectedElementIds.length === 0) return;
+
+    const newElements = [];
+    const newIds = [];
+    selectedElementIds.forEach((selId) => {
+      const element = elements.find(el => el.id === selId);
+      if (!element) return;
+      const newId = `${element.type}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      newElements.push({
+        ...JSON.parse(JSON.stringify(element)),
+        id: newId,
+        x: element.x + 20,
+        y: element.y + 20,
+        zIndex: elements.length + newElements.length
+      });
+      newIds.push(newId);
+    });
+
+    if (newElements.length === 0) return;
+    set((state) => ({
+      elements: [...state.elements, ...newElements],
+      selectedElementId: newIds[0],
+      selectedElementIds: newIds
+    }));
+    get().saveState();
+    get().showToastMessage('Đã nhân đôi');
+  },
+
+  // ============ NUDGE ============
+  nudgeElement: (direction, amount) => {
+    const { selectedElementIds } = get();
+    if (selectedElementIds.length === 0) return;
+
+    const updates = {};
+    switch (direction) {
+      case 'left': updates.x = -amount; break;
+      case 'right': updates.x = amount; break;
+      case 'up': updates.y = -amount; break;
+      case 'down': updates.y = amount; break;
+    }
+
+    set((state) => ({
+      elements: state.elements.map(el => {
+        if (!selectedElementIds.includes(el.id)) return el;
+        if (el.locked) return el;
+        return {
+          ...el,
+          x: el.x + (updates.x || 0),
+          y: el.y + (updates.y || 0)
+        };
+      })
+    }));
+    get().saveState();
+  },
+
+  // ============ LOCK/UNLOCK ============
+  toggleElementLock: (id) => {
+    const { elements } = get();
+    const element = elements.find(el => el.id === id);
+    if (!element) return;
+    set((state) => ({
+      elements: state.elements.map(el => el.id === id ? { ...el, locked: !el.locked } : el)
+    }));
+    get().saveState();
+    get().showToastMessage(element.locked ? 'Đã mở khóa' : 'Đã khóa');
+  },
+
+  // ============ VISIBILITY ============
+  toggleElementVisibility: (id) => {
+    const { elements } = get();
+    const element = elements.find(el => el.id === id);
+    if (!element) return;
+    const newVisible = element.visible === false ? true : false;
+    set((state) => ({
+      elements: state.elements.map(el => el.id === id ? { ...el, visible: newVisible } : el)
+    }));
+    get().saveState();
+    get().showToastMessage(newVisible ? 'Đã hiện' : 'Đã ẩn');
+  },
+
+  // ============ TEMPLATE ============
+  applyTemplate: (template) => {
+    set({
+      background: template.background,
+      elements: template.elements.map((el, i) => ({ ...el, zIndex: i })),
+      selectedElementId: null,
+      selectedElementIds: [],
+      history: [],
+      historyIndex: -1
+    });
+    get().saveState();
+    get().showToastMessage('Đã áp dụng mẫu');
+  },
 
   // ============ TOAST ============
-  showToastMessage: (message) => {
-    set({ toast: message });
+  showToastMessage: (messageOrObj) => {
+    const toast = typeof messageOrObj === 'string'
+      ? { message: messageOrObj, type: 'info' }
+      : { type: 'info', ...messageOrObj };
+    set({ toast });
     setTimeout(() => set({ toast: null }), 2500);
   }
 }));
