@@ -243,7 +243,14 @@ const useEditorStore = create((set, get) => ({
     get().showToastMessage('Đã xóa phần tử');
   },
 
-  selectElement: (id) => set({ selectedElementId: id, selectedElementIds: [id] }),
+  selectElement: (id) => {
+    const group = get().getGroupForElement(id);
+    if (group) {
+      set({ selectedElementId: id, selectedElementIds: [...group.elementIds] });
+    } else {
+      set({ selectedElementId: id, selectedElementIds: [id] });
+    }
+  },
   deselectElement: () => set({ selectedElementId: null, selectedElementIds: [] }),
 
   toggleSelectElement: (id) => {

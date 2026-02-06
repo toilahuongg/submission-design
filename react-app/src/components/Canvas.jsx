@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import useEditorStore from '../store/editorStore';
 import { SnapLines, GuideLines, Rulers, DraggableElement } from './canvas';
 
@@ -16,6 +16,7 @@ export default function Canvas() {
     deselectElement,
     saveState,
     getGroupForElement,
+    groups,
     showRulers,
     showGuides,
     guides,
@@ -142,6 +143,41 @@ export default function Canvas() {
   const backgroundStyle = getBackgroundStyle();
   const hasBlur = background.type === 'image' && background.blur > 0;
 
+  // Compute group bounding boxes for selected groups
+  const selectedGroupBoxes = useMemo(() => {
+    if (selectedElementIds.length < 2) return [];
+    const seen = new Set();
+    const boxes = [];
+    for (const id of selectedElementIds) {
+      const group = groups.find(g => g.elementIds.includes(id));
+      if (!group || seen.has(group.id)) continue;
+      seen.add(group.id);
+      const members = elements.filter(el => group.elementIds.includes(el.id));
+      if (members.length < 2) continue;
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const el of members) {
+        // Get element dimensions - check DOM for actual rendered size
+        const domEl = document.querySelector(`[data-element-id="${el.id}"]`);
+        let w, h;
+        if (domEl) {
+          const rect = domEl.getBoundingClientRect();
+          w = rect.width / zoom;
+          h = rect.height / zoom;
+        } else {
+          // Fallback to stored dimensions
+          w = el.width || el.size || 150;
+          h = el.height || el.size || 50;
+        }
+        minX = Math.min(minX, el.x);
+        minY = Math.min(minY, el.y);
+        maxX = Math.max(maxX, el.x + w);
+        maxY = Math.max(maxY, el.y + h);
+      }
+      boxes.push({ id: group.id, x: minX - 12, y: minY - 12, w: maxX - minX + 24, h: maxY - minY + 24 });
+    }
+    return boxes;
+  }, [selectedElementIds, groups, elements, zoom]);
+
   return (
     <main className="canvas-area">
       <div className="canvas-container" ref={containerRef}>
@@ -182,6 +218,19 @@ export default function Canvas() {
                   onDragEnd={handleDragEnd}
                 />
               ))}
+            {selectedGroupBoxes.map(box => (
+              <div
+                key={box.id}
+                className="group-bbox"
+                style={{
+                  position: 'absolute',
+                  left: box.x,
+                  top: box.y,
+                  width: box.w,
+                  height: box.h,
+                }}
+              />
+            ))}
             <SnapLines lines={snapLines} />
             {showGuides && <GuideLines guides={guides} />}
           </div>

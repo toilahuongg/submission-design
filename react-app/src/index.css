@@ -2775,6 +2775,15 @@ input[type="checkbox"] {
   color: var(--text-primary);
 }
 
+/* ============ GROUP BOUNDING BOX ============ */
+.group-bbox {
+  border: 2px dashed rgba(92, 106, 196, 0.5);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  z-index: 5;
+  background: rgba(92, 106, 196, 0.03);
+}
+
 /* ============ LOCKED ELEMENT ============ */
 .canvas-element.locked {
   cursor: default !important;

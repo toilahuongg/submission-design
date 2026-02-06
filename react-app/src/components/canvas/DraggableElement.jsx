@@ -47,6 +47,7 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
       ref={(node) => { ref.current = node; textRef.current = node; }}
       className={`canvas-element canvas-text ${isSelected ? 'selected' : ''} ${element.locked ? 'locked' : ''}`}
       style={textStyle}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
       contentEditable={!element.locked}
       suppressContentEditableWarning
@@ -179,6 +180,7 @@ function DraggableShape({ element, isSelected, zoom, onSelect, onUpdate, onDragE
         top: element.y,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
       }}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
     >
       {renderShape()}
@@ -204,6 +206,7 @@ function DraggableImage({ element, isSelected, zoom, onSelect, onUpdate, onDragE
         top: element.y,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
       }}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
     >
       <img
@@ -291,6 +294,7 @@ function DraggableAnnotation({ element, isSelected, zoom, onSelect, onUpdate, on
         top: element.y,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
       }}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
     >
       {renderAnnotation()}
@@ -313,6 +317,7 @@ function DraggableIcon({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
         top: element.y,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
       }}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
     >
       <div
@@ -363,6 +368,7 @@ function DraggableDeviceFrame({ element, isSelected, zoom, onSelect, onUpdate, o
         height: height,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
       }}
+      data-element-id={element.id}
       onMouseDown={handleMouseDown}
     >
       <DeviceFrame
