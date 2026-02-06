@@ -15,6 +15,8 @@ export default function ImagesPanel() {
   const inputRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
 
+  const [imageUrl, setImageUrl] = useState('');
+
   const handleUpload = (file) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
@@ -31,8 +33,43 @@ export default function ImagesPanel() {
     }
   };
 
+  const handleAddFromUrl = () => {
+    if (!imageUrl.trim()) return;
+
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      const maxSize = 300;
+      const ratio = Math.min(maxSize / img.width, maxSize / img.height, 1);
+      addImageOverlay(imageUrl, img.width * ratio, img.height * ratio);
+      setImageUrl('');
+    };
+    img.onerror = () => {
+      // In a real app we might want to show a toast here, 
+      // but for now we'll just log or fail silently
+      console.error("Failed to load image from URL");
+    };
+    img.src = imageUrl;
+  };
+
   return (
     <Panel title="Hình ảnh overlay" id="imagesPanel" defaultOpen={false}>
+      <div className="form-group" style={{ marginBottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Dán link ảnh vào đây..."
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddFromUrl()}
+          />
+          <button className="btn btn--primary" onClick={handleAddFromUrl} style={{ padding: '0 12px', whiteSpace: 'nowrap' }}>
+            Thêm
+          </button>
+        </div>
+      </div>
+
       <div
         className={`upload-zone ${dragOver ? 'dragover' : ''}`}
         onClick={() => inputRef.current?.click()}
@@ -41,7 +78,7 @@ export default function ImagesPanel() {
         onDrop={(e) => { e.preventDefault(); setDragOver(false); handleUpload(e.dataTransfer.files[0]); }}
       >
         <UploadIcon />
-        <span>Thêm logo / sticker</span>
+        <span>Tải ảnh từ máy</span>
         <input ref={inputRef} type="file" accept="image/*" hidden onChange={(e) => handleUpload(e.target.files[0])} />
       </div>
 

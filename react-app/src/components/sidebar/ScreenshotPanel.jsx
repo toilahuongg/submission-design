@@ -7,6 +7,7 @@ export default function ScreenshotPanel() {
   const { setScreenshot, showToastMessage, elements, selectedElementId } = useEditorStore();
   const inputRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   const selectedElement = elements.find(el => el.id === selectedElementId);
   const isDeviceSelected = selectedElement?.type === 'device';
@@ -26,8 +27,30 @@ export default function ScreenshotPanel() {
     }
   };
 
+  const handleSetFromUrl = () => {
+    if (!imageUrl.trim()) return;
+    setScreenshot(imageUrl);
+    setImageUrl('');
+  };
+
   return (
     <Panel title="Ảnh chụp màn hình" id="screenshotPanel" autoExpand={isDeviceSelected}>
+      <div className="form-group" style={{ marginBottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Dán link ảnh chụp màn hình..."
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSetFromUrl()}
+          />
+          <button className="btn btn--primary" onClick={handleSetFromUrl} style={{ padding: '0 12px', whiteSpace: 'nowrap' }}>
+            {isDeviceSelected ? 'Cập nhật' : 'Thêm'}
+          </button>
+        </div>
+      </div>
+
       <div
         className={`upload-zone upload-zone--large ${dragOver ? 'dragover' : ''}`}
         onClick={() => inputRef.current?.click()}

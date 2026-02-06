@@ -7,6 +7,7 @@ export default function BackgroundPanel() {
   const { background, setBackground, setBackgroundType, colorPresets, showToastMessage } = useEditorStore();
   const bgImageRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   const handleImageUpload = (file) => {
     if (file && file.type.startsWith('image/')) {
@@ -17,6 +18,13 @@ export default function BackgroundPanel() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleSetFromUrl = () => {
+    if (!imageUrl.trim()) return;
+    setBackground({ image: imageUrl, type: 'image' });
+    setImageUrl('');
+    showToastMessage('Đã cập nhật ảnh nền từ URL');
   };
 
   return (
@@ -107,6 +115,21 @@ export default function BackgroundPanel() {
         <>
           <div className="form-group">
             <label className="form-label">Ảnh nền</label>
+            <div className="form-group" style={{ marginBottom: '12px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Dán link ảnh nền..."
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSetFromUrl()}
+                />
+                <button className="btn btn--primary" onClick={handleSetFromUrl} style={{ padding: '0 12px', whiteSpace: 'nowrap' }}>
+                  Cập nhật
+                </button>
+              </div>
+            </div>
             <div
               className={`upload-zone ${dragOver ? 'dragover' : ''}`}
               onClick={() => bgImageRef.current?.click()}
