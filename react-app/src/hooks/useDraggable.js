@@ -22,7 +22,10 @@ export default function useDraggable({ element, zoom, onUpdate, onSelect, onDrag
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!isDragging.current) return;
-      hasDragged.current = true;
+      if (!hasDragged.current) {
+        hasDragged.current = true;
+        ref.current?.classList.add('dragging');
+      }
       const dx = (e.clientX - startPos.current.x) / zoom;
       const dy = (e.clientY - startPos.current.y) / zoom;
       const newX = Math.round(initialPos.current.x + dx);
@@ -32,6 +35,7 @@ export default function useDraggable({ element, zoom, onUpdate, onSelect, onDrag
 
     const handleMouseUp = () => {
       if (hasDragged.current) {
+        ref.current?.classList.remove('dragging');
         hasDragged.current = false;
         onDragEnd?.();
       }

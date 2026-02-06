@@ -57,11 +57,16 @@ export default function DeviceFrame({ type, scale, shadow, screenshot }) {
   if (type === 'laptop') {
     return (
       <div className="device-frame device-frame--laptop" style={shadowStyle}>
-        <div className="laptop-screen" style={{ width: baseWidth, height: baseHeight }}>
-          {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
-        </div>
-        <div className="laptop-base">
-          <div className="laptop-notch"></div>
+        <div className="laptop-hardware">
+          <div className="laptop-screen-container">
+            <div className="laptop-camera"></div>
+            <div className="laptop-screen" style={{ width: baseWidth, height: baseHeight }}>
+              {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
+            </div>
+          </div>
+          <div className="laptop-base">
+            <div className="laptop-trackpad"></div>
+          </div>
         </div>
       </div>
     );
@@ -82,7 +87,7 @@ export default function DeviceFrame({ type, scale, shadow, screenshot }) {
   }
 
   if (type === 'iphone') {
-    const phoneWidth = 280 * (scale / 100);
+    const phoneWidth = 300 * (scale / 100);
     const phoneHeight = 606 * (scale / 100);
     return (
       <div className="device-frame device-frame--iphone" style={shadowStyle}>
@@ -127,11 +132,12 @@ export default function DeviceFrame({ type, scale, shadow, screenshot }) {
     const tabletHeight = 450 * (scale / 100);
     return (
       <div className="device-frame device-frame--ipad" style={shadowStyle}>
-        <div className="ipad-camera"></div>
-        <div className="ipad-screen" style={{ width: tabletWidth, height: tabletHeight }}>
-          {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
+        <div className="ipad-body">
+          <div className="ipad-camera"></div>
+          <div className="ipad-screen" style={{ width: tabletWidth, height: tabletHeight }}>
+            {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
+          </div>
         </div>
-        <div className="ipad-home-indicator"></div>
       </div>
     );
   }
@@ -141,9 +147,11 @@ export default function DeviceFrame({ type, scale, shadow, screenshot }) {
     const tabletHeight = 420 * (scale / 100);
     return (
       <div className="device-frame device-frame--tablet" style={shadowStyle}>
-        <div className="tablet-camera"></div>
-        <div className="tablet-screen" style={{ width: tabletWidth, height: tabletHeight }}>
-          {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
+        <div className="tablet-body">
+          <div className="tablet-camera"></div>
+          <div className="tablet-screen" style={{ width: tabletWidth, height: tabletHeight }}>
+            {screenshot ? <img src={screenshot} alt="Screenshot" /> : placeholder}
+          </div>
         </div>
       </div>
     );

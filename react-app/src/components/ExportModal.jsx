@@ -8,15 +8,32 @@ const DownloadIcon = () => (
   </svg>
 );
 
+const SpinnerIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="export-spinner">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.2"/>
+    <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
+
+const ErrorIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M15 9l-6 6M9 9l6 6"/>
+  </svg>
+);
+
 export default function ExportModal() {
   const { showExportModal, setShowExportModal, showToastMessage } = useEditorStore();
   const [filename, setFilename] = useState('shopify-screenshot');
   const [format, setFormat] = useState('png');
   const [preview, setPreview] = useState(null);
+  const [previewError, setPreviewError] = useState(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState(null);
 
   const generatePreview = useCallback(async () => {
     setPreview(null);
+    setPreviewError(null);
     try {
       const canvas = document.getElementById('canvas');
       if (!canvas) return;
@@ -36,17 +53,20 @@ export default function ExportModal() {
       setPreview(result.toDataURL('image/png'));
     } catch (error) {
       console.error('Preview error:', error);
+      setPreviewError('Không thể tạo preview. Vui lòng thử lại.');
     }
   }, []);
 
   useEffect(() => {
     if (showExportModal) {
+      setExportError(null);
       generatePreview();
     }
   }, [showExportModal, generatePreview]);
 
   const handleExport = async () => {
     setIsExporting(true);
+    setExportError(null);
     try {
       const canvas = document.getElementById('canvas');
       if (!canvas) return;
@@ -65,7 +85,6 @@ export default function ExportModal() {
       canvas.style.transform = originalTransform;
 
       if (format === 'pdf') {
-        // Dynamic import jspdf
         const { default: jsPDF } = await import('jspdf');
         const imgData = result.toDataURL('image/png');
         const pdf = new jsPDF({
@@ -90,7 +109,8 @@ export default function ExportModal() {
       showToastMessage('Đã xuất ảnh thành công!');
     } catch (error) {
       console.error('Export error:', error);
-      showToastMessage('Lỗi khi xuất ảnh');
+      setExportError('Lỗi khi xuất ảnh. Vui lòng thử lại.');
+      showToastMessage({ message: 'Lỗi khi xuất ảnh', type: 'error' });
     } finally {
       setIsExporting(false);
     }
@@ -110,10 +130,25 @@ export default function ExportModal() {
           <div className="export-preview">
             {preview ? (
               <img src={preview} alt="Preview" />
+            ) : previewError ? (
+              <div className="export-preview__error">
+                <ErrorIcon />
+                <span>{previewError}</span>
+                <button className="btn btn--ghost" onClick={generatePreview}>Thử lại</button>
+              </div>
             ) : (
-              'Đang tạo preview...'
+              <div className="export-preview__loading">
+                <SpinnerIcon />
+                <span>Đang tạo preview...</span>
+              </div>
             )}
           </div>
+          {exportError && (
+            <div className="export-error">
+              <ErrorIcon />
+              <span>{exportError}</span>
+            </div>
+          )}
           <div className="export-options">
             <div className="form-group">
               <label className="form-label">Tên file</label>
@@ -154,7 +189,7 @@ export default function ExportModal() {
             Hủy
           </button>
           <button className="btn btn--primary" onClick={handleExport} disabled={isExporting}>
-            <DownloadIcon />
+            {isExporting ? <SpinnerIcon /> : <DownloadIcon />}
             {isExporting ? 'Đang xuất...' : 'Tải xuống'}
           </button>
         </div>

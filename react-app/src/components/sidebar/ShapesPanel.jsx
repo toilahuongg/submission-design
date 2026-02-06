@@ -122,6 +122,62 @@ export default function ShapesPanel() {
             </div>
           )}
 
+          {selectedShape.shapeType === 'arrow' && (
+            <>
+              <div className="form-group">
+                <label className="form-label">Kiểu đường kẻ</label>
+                <select
+                  className="form-input"
+                  value={selectedShape.arrowStyle || 'solid'}
+                  onChange={(e) => updateElementWithHistory(selectedElementId, { arrowStyle: e.target.value })}
+                >
+                  <option value="solid">Liền nét</option>
+                  <option value="dashed">Đứt đoạn (Dashed)</option>
+                  <option value="dotted">Chấm bi (Dotted)</option>
+                  <option value="curved">Đường cong</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Vị trí đầu mũi tên</label>
+                <div className="btn-group">
+                  <button className={`btn-group__item ${(selectedShape.arrowHead || 'end') === 'none' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { arrowHead: 'none' })}>Không</button>
+                  <button className={`btn-group__item ${selectedShape.arrowHead === 'end' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { arrowHead: 'end' })}>Cuối</button>
+                  <button className={`btn-group__item ${selectedShape.arrowHead === 'start' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { arrowHead: 'start' })}>Đầu</button>
+                  <button className={`btn-group__item ${selectedShape.arrowHead === 'both' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { arrowHead: 'both' })}>Cả hai</button>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Kiểu đầu mũi tên</label>
+                <select
+                  className="form-input"
+                  value={selectedShape.arrowHeadStyle || 'classic'}
+                  onChange={(e) => updateElementWithHistory(selectedElementId, { arrowHeadStyle: e.target.value })}
+                >
+                  <option value="classic">Tam giác</option>
+                  <option value="stealth">Stealth</option>
+                  <option value="open">Mở (Open)</option>
+                  <option value="circle">Tròn</option>
+                  <option value="diamond">Kim cương</option>
+                </select>
+              </div>
+
+              {selectedShape.arrowStyle === 'curved' && (
+                <div className="form-group">
+                  <label className="form-label">Độ cong</label>
+                  <input
+                    type="range" min="-1" max="1" step="0.1"
+                    value={selectedShape.curvature || 0}
+                    onChange={(e) => updateElement(selectedElementId, { curvature: parseFloat(e.target.value) })}
+                    onMouseUp={() => saveState()}
+                  />
+                  <span className="range-value">{selectedShape.curvature || 0}</span>
+                </div>
+              )}
+            </>
+          )}
+
           <div className="form-group">
             <label className="form-label">Độ trong suốt</label>
             <input type="range" min="0.1" max="1" step="0.1" value={selectedShape.opacity} onChange={(e) => updateElement(selectedElementId, { opacity: parseFloat(e.target.value) })} onMouseUp={() => saveState()} />

@@ -28,6 +28,7 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
     fontSize: element.size,
     color: element.color,
     fontWeight: element.weight,
+    fontStyle: element.italic ? 'italic' : 'normal',
     textAlign: element.textAlign || 'center',
     letterSpacing: element.letterSpacing ? `${element.letterSpacing}px` : '0',
     transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
@@ -92,25 +93,63 @@ function DraggableShape({ element, isSelected, zoom, onSelect, onUpdate, onDragE
         return <div style={{ ...baseStyle, borderRadius: element.borderRadius }} />;
       case 'circle':
         return <div style={{ ...baseStyle, borderRadius: '50%' }} />;
-      case 'arrow':
+      case 'arrow': {
+        const { arrowStyle, arrowHead, arrowHeadStyle, curvature, fill, strokeWidth } = element;
+        const w = element.width;
+        const h = element.height;
+        const midY = h / 2;
+
+        // Define arrow head markers
+        const renderMarkers = () => (
+          <defs>
+            {/* Classic Triangle */}
+            <marker id={`arrowhead-classic-${element.id}`} markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill={fill} />
+            </marker>
+            {/* Stealth */}
+            <marker id={`arrowhead-stealth-${element.id}`} markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <path d="M0 0 L10 3.5 L0 7 L3 3.5 Z" fill={fill} />
+            </marker>
+            {/* Open */}
+            <marker id={`arrowhead-open-${element.id}`} markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+              <path d="M1 1 L9 5 L1 9" fill="none" stroke={fill} strokeWidth="2" strokeLinecap="round" />
+            </marker>
+            {/* Circle */}
+            <marker id={`arrowhead-circle-${element.id}`} markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <circle cx="4" cy="4" r="3" fill={fill} />
+            </marker>
+            {/* Diamond */}
+            <marker id={`arrowhead-diamond-${element.id}`} markerWidth="12" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0 4 L6 0 L12 4 L6 8 Z" fill={fill} />
+            </marker>
+          </defs>
+        );
+
+        const markerId = `url(#arrowhead-${arrowHeadStyle || 'classic'}-${element.id})`;
+        const dashArray = arrowStyle === 'dashed' ? '8 4' : arrowStyle === 'dotted' ? '2 3' : 'none';
+
+        let pathData = `M 10 ${midY} L ${w - 10} ${midY}`;
+        if (arrowStyle === 'curved') {
+          const curveOffset = (curvature || 0) * (h / 2);
+          pathData = `M 10 ${midY} Q ${w / 2} ${midY - curveOffset} ${w - 10} ${midY}`;
+        }
+
         return (
-          <svg width={element.width} height={element.height} viewBox={`0 0 ${element.width} ${element.height}`}>
-            <defs>
-              <marker id={`arrowhead-${element.id}`} markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                <polygon points="0 0, 10 3.5, 0 7" fill={element.fill} />
-              </marker>
-            </defs>
-            <line
-              x1="0"
-              y1={element.height / 2}
-              x2={element.width - 10}
-              y2={element.height / 2}
-              stroke={element.fill}
-              strokeWidth="3"
-              markerEnd={`url(#arrowhead-${element.id})`}
+          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: 'visible' }}>
+            {renderMarkers()}
+            <path
+              d={pathData}
+              fill="none"
+              stroke={fill}
+              strokeWidth={Math.max(2, strokeWidth)}
+              strokeDasharray={dashArray}
+              markerStart={arrowHead === 'both' || arrowHead === 'start' ? markerId : undefined}
+              markerEnd={arrowHead === 'both' || arrowHead === 'end' ? markerId : undefined}
+              style={{ transition: 'all 0.2s ease' }}
             />
           </svg>
         );
+      }
       case 'badge':
         return (
           <div style={{

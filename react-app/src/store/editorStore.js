@@ -26,6 +26,11 @@ const BUILT_IN_ICONS = [
   { id: 'gift', name: 'Quà', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>' },
   { id: 'rocket', name: 'Tên lửa', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>' },
   { id: 'cursor-click', name: 'Con trỏ click', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 9l-1 11 3.5-5 5.5 1L9 9z"/></svg>' },
+  { id: 'tag', name: 'Thẻ tag', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>' },
+  { id: 'refresh', name: 'Làm mới', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>' },
+  { id: 'clock', name: 'Đồng hồ', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' },
+  { id: 'folder', name: 'Thư mục', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>' },
+  { id: 'tag-arrow', name: 'Thẻ tag mũi tên', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/><path d="M10 10l4 4m0-4l-4 4"/></svg>' }
 ];
 
 const useEditorStore = create((set, get) => ({
@@ -430,7 +435,7 @@ const useEditorStore = create((set, get) => ({
     const sizeDefaults = {
       rectangle: { width: 200, height: 100, borderRadius: 8 },
       circle: { width: 100, height: 100 },
-      arrow: { width: 120, height: 40, direction: 'right' },
+      arrow: { width: 160, height: 80, arrowStyle: 'solid', arrowHead: 'end', arrowHeadStyle: 'classic', curvature: 0 },
       badge: { width: 60, height: 60, text: '1' }
     };
 
@@ -938,8 +943,10 @@ const useEditorStore = create((set, get) => ({
       ? { message: messageOrObj, type: 'info' }
       : { type: 'info', ...messageOrObj };
     set({ toast });
-    setTimeout(() => set({ toast: null }), 2500);
-  }
+    setTimeout(() => set({ toast: null }), 3000);
+  },
+
+  hideToast: () => set({ toast: null })
 }));
 
 export default useEditorStore;
