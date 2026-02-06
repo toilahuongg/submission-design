@@ -340,6 +340,305 @@ const TEMPLATES = [
         zIndex: 12
       }
     ]
+  },
+  {
+    id: 'feature-showcase',
+    name: 'Feature Showcase',
+    thumbnail: '#667eea',
+    background: {
+      type: 'gradient',
+      gradientStart: '#667eea',
+      gradientEnd: '#764ba2',
+      gradientAngle: 135,
+      gradientType: 'linear',
+      color: '#667eea'
+    },
+    elements: [
+      {
+        id: 'fs-device',
+        type: 'device',
+        deviceType: 'browser',
+        scale: 60,
+        shadow: 40,
+        x: 800,
+        y: 300,
+        rotation: 0,
+        zIndex: 1
+      },
+      {
+        id: 'fs-title',
+        type: 'text',
+        content: 'Powerful Features\nfor Your Store',
+        x: 800,
+        y: 60,
+        size: 52,
+        weight: '700',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'fs-feat1',
+        type: 'text',
+        content: 'Real-time Analytics',
+        x: 160,
+        y: 780,
+        size: 20,
+        weight: '600',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'fs-feat2',
+        type: 'text',
+        content: 'Smart Automation',
+        x: 800,
+        y: 780,
+        size: 20,
+        weight: '600',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'fs-feat3',
+        type: 'text',
+        content: 'One-Click Setup',
+        x: 1440,
+        y: 780,
+        size: 20,
+        weight: '600',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      }
+    ]
+  },
+  {
+    id: 'before-after',
+    name: 'Before / After',
+    thumbnail: '#1a1a2e',
+    background: {
+      type: 'gradient',
+      gradientStart: '#1a1a2e',
+      gradientEnd: '#16213e',
+      gradientAngle: 180,
+      gradientType: 'linear',
+      color: '#1a1a2e'
+    },
+    elements: [
+      {
+        id: 'ba-title',
+        type: 'text',
+        content: 'Before & After',
+        x: 800,
+        y: 50,
+        size: 42,
+        weight: '700',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'ba-device1',
+        type: 'device',
+        deviceType: 'browser',
+        scale: 50,
+        shadow: 30,
+        x: 250,
+        y: 350,
+        rotation: 0,
+        zIndex: 1
+      },
+      {
+        id: 'ba-device2',
+        type: 'device',
+        deviceType: 'browser',
+        scale: 50,
+        shadow: 30,
+        x: 1000,
+        y: 350,
+        rotation: 0,
+        zIndex: 1
+      },
+      {
+        id: 'ba-label1',
+        type: 'text',
+        content: 'BEFORE',
+        x: 400,
+        y: 140,
+        size: 18,
+        weight: '600',
+        color: '#ff6b6b',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        letterSpacing: 3,
+        zIndex: 5
+      },
+      {
+        id: 'ba-label2',
+        type: 'text',
+        content: 'AFTER',
+        x: 1150,
+        y: 140,
+        size: 18,
+        weight: '600',
+        color: '#51cf66',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        letterSpacing: 3,
+        zIndex: 5
+      },
+      {
+        id: 'ba-arrow',
+        type: 'shape',
+        shapeType: 'arrow',
+        x: 700,
+        y: 400,
+        width: 200,
+        height: 60,
+        fill: '#FFFFFF',
+        strokeWidth: 3,
+        opacity: 0.8,
+        arrowStyle: 'solid',
+        arrowHead: 'end',
+        arrowHeadStyle: 'classic',
+        zIndex: 3
+      }
+    ]
+  },
+  {
+    id: 'app-overview',
+    name: 'App Overview',
+    thumbnail: '#008060',
+    background: {
+      type: 'gradient',
+      gradientStart: '#008060',
+      gradientEnd: '#004d3a',
+      gradientAngle: 135,
+      gradientType: 'linear',
+      color: '#008060'
+    },
+    elements: [
+      {
+        id: 'ao-title',
+        type: 'text',
+        content: 'Your App Name',
+        x: 800,
+        y: 80,
+        size: 56,
+        weight: '700',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'ao-subtitle',
+        type: 'text',
+        content: 'The all-in-one solution for your Shopify store',
+        x: 800,
+        y: 170,
+        size: 22,
+        weight: '400',
+        color: 'rgba(255,255,255,0.8)',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'ao-device',
+        type: 'device',
+        deviceType: 'browser',
+        scale: 65,
+        shadow: 50,
+        x: 800,
+        y: 420,
+        rotation: 0,
+        zIndex: 1
+      },
+      {
+        id: 'ao-badge1',
+        type: 'shape',
+        shapeType: 'badge',
+        x: 100,
+        y: 750,
+        width: 40,
+        height: 40,
+        fill: '#FFFFFF',
+        strokeWidth: 0,
+        opacity: 1,
+        text: '5★',
+        zIndex: 3
+      },
+      {
+        id: 'ao-rating',
+        type: 'text',
+        content: '500+ Five Star Reviews',
+        x: 250,
+        y: 758,
+        size: 18,
+        weight: '600',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'left',
+        zIndex: 5
+      }
+    ]
+  },
+  {
+    id: 'minimal-dark',
+    name: 'Minimal Dark',
+    thumbnail: '#111111',
+    background: {
+      type: 'solid',
+      color: '#111111'
+    },
+    elements: [
+      {
+        id: 'md-title',
+        type: 'text',
+        content: 'Simple. Powerful.',
+        x: 800,
+        y: 120,
+        size: 64,
+        weight: '700',
+        color: '#FFFFFF',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'md-subtitle',
+        type: 'text',
+        content: 'Everything you need, nothing you don\'t.',
+        x: 800,
+        y: 220,
+        size: 22,
+        weight: '400',
+        color: '#888888',
+        font: 'Instrument Sans',
+        textAlign: 'center',
+        zIndex: 5
+      },
+      {
+        id: 'md-device',
+        type: 'device',
+        deviceType: 'browser',
+        scale: 70,
+        shadow: 30,
+        x: 800,
+        y: 450,
+        rotation: 0,
+        zIndex: 1
+      }
+    ]
   }
 ];
 

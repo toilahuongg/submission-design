@@ -63,6 +63,25 @@ const KeyboardIcon = () => (
   </svg>
 );
 
+const FilePlusIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="12" y1="18" x2="12" y2="12"/>
+    <line x1="9" y1="15" x2="15" y2="15"/>
+  </svg>
+);
+
+const GridIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+    <line x1="3" y1="9" x2="21" y2="9"/>
+    <line x1="3" y1="15" x2="21" y2="15"/>
+    <line x1="9" y1="3" x2="9" y2="21"/>
+    <line x1="15" y1="3" x2="15" y2="21"/>
+  </svg>
+);
+
 export default function Header() {
   const {
     undo, redo, canUndo, canRedo, setShowExportModal,
@@ -70,10 +89,17 @@ export default function Header() {
     showRulers, setShowRulers,
     showPropertiesSidebar, togglePropertiesSidebar,
     enableAutoSave,
-    setShowShortcutsModal
+    setShowShortcutsModal,
+    resetProject,
+    historyIndex, history,
+    zoom,
+    showGrid, setShowGrid
   } = useEditorStore();
 
   const fileInputRef = useRef(null);
+
+  const undoSteps = historyIndex;
+  const redoSteps = history.length - 1 - historyIndex;
 
   const handleLoadProject = (e) => {
     const file = e.target.files[0];
@@ -84,6 +110,12 @@ export default function Header() {
     };
     reader.readAsText(file);
     e.target.value = '';
+  };
+
+  const handleNewProject = () => {
+    if (window.confirm('Tạo dự án mới? Tất cả thay đổi chưa lưu sẽ bị mất.')) {
+      resetProject();
+    }
   };
 
   return (
@@ -100,8 +132,48 @@ export default function Header() {
             Đã lưu
           </span>
         )}
+        <button
+          className="btn btn--ghost"
+          onClick={handleNewProject}
+          title="Dự án mới"
+        >
+          <FilePlusIcon />
+        </button>
       </div>
+
+      <div className="header__center">
+        <div className="header__history-group">
+          <button
+            className="btn btn--ghost"
+            onClick={undo}
+            disabled={!canUndo()}
+            title="Hoàn tác (Ctrl+Z)"
+          >
+            <UndoIcon />
+            {undoSteps > 0 && <span className="header__badge-count">{undoSteps}</span>}
+          </button>
+          <button
+            className="btn btn--ghost"
+            onClick={redo}
+            disabled={!canRedo()}
+            title="Làm lại (Ctrl+Y)"
+          >
+            <RedoIcon />
+            {redoSteps > 0 && <span className="header__badge-count">{redoSteps}</span>}
+          </button>
+        </div>
+        <div className="header__divider"></div>
+        <span className="header__zoom-info">{Math.round(zoom * 100)}%</span>
+      </div>
+
       <div className="header__actions">
+        <button
+          className={`btn btn--ghost ${showGrid ? 'btn--active' : ''}`}
+          onClick={() => setShowGrid(!showGrid)}
+          title="Hiển thị lưới"
+        >
+          <GridIcon />
+        </button>
         <button
           className={`btn btn--ghost ${showPropertiesSidebar ? 'btn--active' : ''}`}
           onClick={togglePropertiesSidebar}
@@ -146,24 +218,7 @@ export default function Header() {
           onChange={handleLoadProject}
         />
         <div className="header__divider"></div>
-        <button
-          className="btn btn--ghost"
-          onClick={undo}
-          disabled={!canUndo()}
-          title="Hoàn tác (Ctrl+Z)"
-        >
-          <UndoIcon />
-        </button>
-        <button
-          className="btn btn--ghost"
-          onClick={redo}
-          disabled={!canRedo()}
-          title="Làm lại (Ctrl+Y)"
-        >
-          <RedoIcon />
-        </button>
-        <div className="header__divider"></div>
-        <button className="btn btn--primary" onClick={() => setShowExportModal(true)}>
+        <button className="btn btn--export" onClick={() => setShowExportModal(true)}>
           <DownloadIcon />
           Xuất ảnh
         </button>

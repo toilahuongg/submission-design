@@ -2482,6 +2482,114 @@ input[type="checkbox"] {
   text-overflow: ellipsis;
 }
 
+/* Icon Picker - Enhanced */
+.tool-panel__body--icons {
+  padding: 0;
+}
+
+.icon-picker {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100vh - 180px);
+}
+
+.icon-picker__search {
+  position: relative;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.icon-picker__search-icon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.icon-picker__search .form-input {
+  padding-left: 32px;
+  width: 100%;
+}
+
+.icon-picker__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.icon-picker__category {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.icon-picker__category:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-emphasis);
+}
+
+.icon-picker__category.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.icon-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: var(--space-md);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.icon-picker__item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.icon-picker__item:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(92, 106, 196, 0.1);
+  transform: scale(1.05);
+}
+
+.icon-picker__item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-picker__empty {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+}
+
 /* Align Buttons */
 .align-buttons {
   display: grid;

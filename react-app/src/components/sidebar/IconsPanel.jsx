@@ -16,6 +16,16 @@ export default function IconsPanel() {
   return (
     <Panel title="Biểu tượng" id="iconsPanel">
       <div className="icon-properties">
+        <div className="form-row">
+          <div className="form-group form-group--half">
+            <label className="form-label">X</label>
+            <input type="number" className="form-input" value={Math.round(selectedIcon.x)} onChange={(e) => updateElement(selectedElementId, { x: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="form-group form-group--half">
+            <label className="form-label">Y</label>
+            <input type="number" className="form-input" value={Math.round(selectedIcon.y)} onChange={(e) => updateElement(selectedElementId, { y: parseInt(e.target.value) || 0 })} />
+          </div>
+        </div>
         <div className="form-group">
           <label className="form-label">Màu</label>
           <div className="color-picker">

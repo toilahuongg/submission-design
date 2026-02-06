@@ -1,4 +1,6 @@
-export default function DeviceFrame({ type, scale, shadow, screenshot }) {
+import { memo } from 'react';
+
+const DeviceFrame = memo(function DeviceFrame({ type, scale, shadow, screenshot }) {
   const baseWidth = 1200 * (scale / 100);
   const baseHeight = 720 * (scale / 100);
   const shadowStyle = { boxShadow: `0 ${shadow / 2}px ${shadow}px rgba(0,0,0,${shadow / 100})` };
@@ -158,4 +160,6 @@ export default function DeviceFrame({ type, scale, shadow, screenshot }) {
   }
 
   return null;
-}
+});
+
+export default DeviceFrame;

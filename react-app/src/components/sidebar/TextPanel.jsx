@@ -6,7 +6,8 @@ import RotationControls from './RotationControls';
 export default function TextPanel() {
   const {
     elements, selectedElementId, updateElement,
-    updateElementWithHistory, deleteElement, saveState
+    updateElementWithHistory, deleteElement, saveState,
+    recentColors, addRecentColor
   } = useEditorStore();
 
   const selectedText = elements.find(t => t.id === selectedElementId && t.type === 'text');
@@ -16,6 +17,17 @@ export default function TextPanel() {
   return (
     <Panel title="Văn bản" id="textPanel">
       <div className="text-properties">
+        <div className="form-row">
+          <div className="form-group form-group--half">
+            <label className="form-label">X</label>
+            <input type="number" className="form-input" value={Math.round(selectedText.x)} onChange={(e) => updateElement(selectedElementId, { x: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="form-group form-group--half">
+            <label className="form-label">Y</label>
+            <input type="number" className="form-input" value={Math.round(selectedText.y)} onChange={(e) => updateElement(selectedElementId, { y: parseInt(e.target.value) || 0 })} />
+          </div>
+        </div>
+
         <div className="form-group">
           <label className="form-label">Nội dung</label>
           <textarea className="form-input" value={selectedText.content} onChange={(e) => updateElement(selectedElementId, { content: e.target.value })} placeholder="Nhập văn bản..." rows={3} style={{ resize: 'vertical' }} />
@@ -60,9 +72,16 @@ export default function TextPanel() {
         <div className="form-group">
           <label className="form-label">Màu chữ</label>
           <div className="color-picker">
-            <input type="color" value={selectedText.color} onChange={(e) => updateElement(selectedElementId, { color: e.target.value })} />
-            <input type="text" className="form-input color-input" value={selectedText.color} onChange={(e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) updateElement(selectedElementId, { color: e.target.value }); }} />
+            <input type="color" value={selectedText.color} onChange={(e) => { updateElement(selectedElementId, { color: e.target.value }); addRecentColor(e.target.value); }} />
+            <input type="text" className="form-input color-input" value={selectedText.color} onChange={(e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { updateElement(selectedElementId, { color: e.target.value }); addRecentColor(e.target.value); } }} />
           </div>
+          {recentColors.length > 0 && (
+            <div className="color-swatches" style={{ marginTop: 6 }}>
+              {recentColors.map((c) => (
+                <button key={c} className={`swatch ${selectedText.color === c ? 'active' : ''}`} style={{ background: c, width: 22, height: 22 }} onClick={() => updateElement(selectedElementId, { color: c })} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="form-group">
@@ -78,6 +97,38 @@ export default function TextPanel() {
           <label className="form-label">Khoảng cách chữ</label>
           <input type="range" min="-5" max="20" value={selectedText.letterSpacing || 0} onChange={(e) => updateElement(selectedElementId, { letterSpacing: parseInt(e.target.value) })} onMouseUp={() => saveState()} />
           <span className="range-value">{selectedText.letterSpacing || 0}px</span>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Chiều cao dòng</label>
+          <input type="range" min="0.8" max="3.0" step="0.1" value={selectedText.lineHeight || 1.5} onChange={(e) => updateElement(selectedElementId, { lineHeight: parseFloat(e.target.value) })} onMouseUp={() => saveState()} />
+          <span className="range-value">{selectedText.lineHeight || 1.5}</span>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Độ trong suốt</label>
+          <input type="range" min="0.1" max="1" step="0.1" value={selectedText.opacity ?? 1} onChange={(e) => updateElement(selectedElementId, { opacity: parseFloat(e.target.value) })} onMouseUp={() => saveState()} />
+          <span className="range-value">{Math.round((selectedText.opacity ?? 1) * 100)}%</span>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            <input type="checkbox" checked={selectedText.textBg?.enabled || false} onChange={(e) => updateElementWithHistory(selectedElementId, { textBg: { ...selectedText.textBg, enabled: e.target.checked, color: selectedText.textBg?.color || '#000000', padding: selectedText.textBg?.padding || 8 } })} />
+            Nền văn bản
+          </label>
+          {selectedText.textBg?.enabled && (
+            <div className="sub-controls">
+              <div className="color-picker">
+                <input type="color" value={selectedText.textBg?.color || '#000000'} onChange={(e) => updateElement(selectedElementId, { textBg: { ...selectedText.textBg, color: e.target.value } })} />
+                <span className="color-label">Màu nền</span>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Padding</label>
+                <input type="range" min="0" max="32" value={selectedText.textBg?.padding || 8} onChange={(e) => updateElement(selectedElementId, { textBg: { ...selectedText.textBg, padding: parseInt(e.target.value) } })} onMouseUp={() => saveState()} />
+                <span className="range-value">{selectedText.textBg?.padding || 8}px</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <RotationControls elementId={selectedElementId} rotation={selectedText.rotation || 0} />

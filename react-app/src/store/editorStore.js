@@ -9,6 +9,21 @@ const COLOR_PRESETS = [
   '#47C1BF', '#F49342', '#212B36', '#637381'
 ];
 
+const GRADIENT_PRESETS = [
+  { name: 'Shopify Purple', start: '#5C6AC4', end: '#202E78', angle: 135 },
+  { name: 'Ocean Blue', start: '#2193b0', end: '#6dd5ed', angle: 135 },
+  { name: 'Sunset', start: '#f7971e', end: '#ffd200', angle: 135 },
+  { name: 'Forest Green', start: '#11998e', end: '#38ef7d', angle: 135 },
+  { name: 'Berry Red', start: '#e52d27', end: '#b31217', angle: 135 },
+  { name: 'Midnight', start: '#232526', end: '#414345', angle: 135 },
+  { name: 'Peach', start: '#ffecd2', end: '#fcb69f', angle: 135 },
+  { name: 'Lavender', start: '#a18cd1', end: '#fbc2eb', angle: 135 },
+  { name: 'Cool Sky', start: '#2980B9', end: '#6DD5FA', angle: 135 },
+  { name: 'Rose Gold', start: '#f4c4f3', end: '#fc67fa', angle: 135 },
+  { name: 'Deep Space', start: '#000428', end: '#004e92', angle: 135 },
+  { name: 'Warm Flame', start: '#ff9a9e', end: '#fecfef', angle: 135 },
+];
+
 const BUILT_IN_ICONS = [
   { id: 'arrow-right', name: 'Mũi tên phải', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' },
   { id: 'arrow-left', name: 'Mũi tên trái', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>' },
@@ -73,9 +88,13 @@ const useEditorStore = create((set, get) => ({
   // Rulers & Guides
   showRulers: false,
   showGuides: true,
+  showGrid: false,
   guides: [],
   snapToGuides: true,
   snapThreshold: 5,
+
+  // Recent colors
+  recentColors: [],
 
   // Auto-save
   enableAutoSave: true,
@@ -83,6 +102,7 @@ const useEditorStore = create((set, get) => ({
   // Constants
 
   colorPresets: COLOR_PRESETS,
+  gradientPresets: GRADIENT_PRESETS,
   builtInIcons: BUILT_IN_ICONS,
 
   // ============ ZOOM ============
@@ -685,6 +705,17 @@ const useEditorStore = create((set, get) => ({
     get().showToastMessage('Đã phân bố đều');
   },
 
+  // ============ GRID ============
+  setShowGrid: (show) => set({ showGrid: show }),
+
+  // ============ RECENT COLORS ============
+  addRecentColor: (color) => {
+    set((state) => {
+      const filtered = state.recentColors.filter(c => c !== color);
+      return { recentColors: [color, ...filtered].slice(0, 8) };
+    });
+  },
+
   // ============ RULERS & GUIDES ============
   setShowRulers: (show) => set({ showRulers: show }),
   setShowGuides: (show) => set({ showGuides: show }),
@@ -957,6 +988,34 @@ const useEditorStore = create((set, get) => ({
     });
     get().saveState();
     get().showToastMessage('Đã áp dụng mẫu');
+  },
+
+  // ============ RESET PROJECT ============
+  resetProject: () => {
+    set({
+      background: {
+        type: 'gradient',
+        color: '#5C6AC4',
+        gradientStart: '#5C6AC4',
+        gradientEnd: '#202E78',
+        gradientAngle: 135,
+        gradientType: 'linear',
+        radialPosition: 'center',
+        image: null,
+        blur: 0
+      },
+      elements: [],
+      selectedElementId: null,
+      selectedElementIds: [],
+      clipboard: null,
+      groups: [],
+      editingGroupId: null,
+      history: [],
+      historyIndex: -1,
+      guides: [],
+    });
+    get().saveState();
+    get().showToastMessage('Đã tạo dự án mới');
   },
 
   // ============ TOAST ============

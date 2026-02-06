@@ -4,7 +4,7 @@ import { UploadIcon } from '../icons/SidebarIcons';
 import Panel from './Panel';
 
 export default function BackgroundPanel() {
-  const { background, setBackground, setBackgroundType, colorPresets, showToastMessage } = useEditorStore();
+  const { background, setBackground, setBackgroundType, colorPresets, gradientPresets, recentColors, addRecentColor, showToastMessage } = useEditorStore();
   const bgImageRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -108,6 +108,24 @@ export default function BackgroundPanel() {
               </select>
             </div>
           )}
+          <div className="form-group">
+            <label className="form-label">Gradient gợi ý</label>
+            <div className="gradient-presets">
+              {gradientPresets.map((preset) => (
+                <button
+                  key={preset.name}
+                  className="gradient-preset-swatch"
+                  style={{ background: `linear-gradient(${preset.angle}deg, ${preset.start}, ${preset.end})` }}
+                  title={preset.name}
+                  onClick={() => {
+                    setBackground({ gradientStart: preset.start, gradientEnd: preset.end, gradientAngle: preset.angle, type: 'gradient' });
+                    addRecentColor(preset.start);
+                    addRecentColor(preset.end);
+                  }}
+                />
+              ))}
+            </div>
+          </div>
         </>
       )}
 
@@ -154,10 +172,21 @@ export default function BackgroundPanel() {
         <span className="form-label">Màu gợi ý</span>
         <div className="color-swatches">
           {colorPresets.map((color) => (
-            <button key={color} className={`swatch ${background.color === color ? 'active' : ''}`} style={{ background: color }} onClick={() => setBackground({ color, type: 'solid' })} />
+            <button key={color} className={`swatch ${background.color === color ? 'active' : ''}`} style={{ background: color }} onClick={() => { setBackground({ color, type: 'solid' }); addRecentColor(color); }} />
           ))}
         </div>
       </div>
+
+      {recentColors.length > 0 && (
+        <div className="preset-colors">
+          <span className="form-label">Màu gần đây</span>
+          <div className="color-swatches">
+            {recentColors.map((color) => (
+              <button key={color} className={`swatch ${background.color === color ? 'active' : ''}`} style={{ background: color }} onClick={() => setBackground({ color, type: 'solid' })} />
+            ))}
+          </div>
+        </div>
+      )}
     </Panel>
   );
 }

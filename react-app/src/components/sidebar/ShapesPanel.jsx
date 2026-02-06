@@ -6,7 +6,8 @@ import RotationControls from './RotationControls';
 export default function ShapesPanel() {
   const {
     elements, selectedElementId, updateElement,
-    updateElementWithHistory, deleteElement, saveState
+    updateElementWithHistory, deleteElement, saveState,
+    recentColors, addRecentColor
   } = useEditorStore();
 
   const selectedShape = elements.find(s => s.id === selectedElementId && s.type === 'shape');
@@ -16,6 +17,16 @@ export default function ShapesPanel() {
   return (
     <Panel title="Hình dạng" id="shapesPanel">
       <div className="shape-properties">
+        <div className="form-row">
+          <div className="form-group form-group--half">
+            <label className="form-label">X</label>
+            <input type="number" className="form-input" value={Math.round(selectedShape.x)} onChange={(e) => updateElement(selectedElementId, { x: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="form-group form-group--half">
+            <label className="form-label">Y</label>
+            <input type="number" className="form-input" value={Math.round(selectedShape.y)} onChange={(e) => updateElement(selectedElementId, { y: parseInt(e.target.value) || 0 })} />
+          </div>
+        </div>
         <div className="form-row">
           <div className="form-group form-group--half">
             <label className="form-label">Chiều rộng</label>
@@ -39,9 +50,16 @@ export default function ShapesPanel() {
           <div className="form-group">
             <label className="form-label">Màu nền</label>
             <div className="color-picker">
-              <input type="color" value={selectedShape.fill} onChange={(e) => updateElement(selectedElementId, { fill: e.target.value })} />
-              <input type="text" className="form-input color-input" value={selectedShape.fill} onChange={(e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) updateElement(selectedElementId, { fill: e.target.value }); }} />
+              <input type="color" value={selectedShape.fill} onChange={(e) => { updateElement(selectedElementId, { fill: e.target.value }); addRecentColor(e.target.value); }} />
+              <input type="text" className="form-input color-input" value={selectedShape.fill} onChange={(e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { updateElement(selectedElementId, { fill: e.target.value }); addRecentColor(e.target.value); } }} />
             </div>
+            {recentColors.length > 0 && (
+              <div className="color-swatches" style={{ marginTop: 6 }}>
+                {recentColors.map((c) => (
+                  <button key={c} className={`swatch ${selectedShape.fill === c ? 'active' : ''}`} style={{ background: c, width: 22, height: 22 }} onClick={() => updateElement(selectedElementId, { fill: c })} />
+                ))}
+              </div>
+            )}
           </div>
         )}
 

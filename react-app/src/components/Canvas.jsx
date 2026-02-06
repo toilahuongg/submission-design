@@ -159,6 +159,7 @@ export default function Canvas() {
     background,
     getBackgroundStyle,
     elements,
+    selectedElementId,
     selectedElementIds,
     selectElement,
     toggleSelectElement,
@@ -169,10 +170,16 @@ export default function Canvas() {
     groups,
     showRulers,
     showGuides,
+    showGrid,
     guides,
     snapToGuides,
     snapThreshold,
     enterGroup,
+    duplicateElement,
+    deleteSelectedElements,
+    toggleElementLock,
+    bringToFront,
+    sendToBack,
   } = useEditorStore();
 
   const canvasRef = useRef(null);
@@ -376,6 +383,9 @@ export default function Canvas() {
               }}
             />
           )}
+          {showGrid && (
+            <div className="canvas__grid" />
+          )}
           <div className="canvas__content">
             {sortedElements
               .filter(el => el.visible !== false)
@@ -406,6 +416,36 @@ export default function Canvas() {
             ))}
             <SnapLines lines={snapLines} measurements={measurements} />
             {showGuides && <GuideLines guides={guides} />}
+            {selectedElementId && selectedElementIds.length === 1 && (() => {
+              const sel = elements.find(e => e.id === selectedElementId);
+              if (!sel) return null;
+              const domEl = document.querySelector(`[data-element-id="${sel.id}"]`);
+              let elW = sel.width || 100;
+              if (domEl) elW = domEl.getBoundingClientRect().width / zoom;
+              return (
+                <div className="quick-actions" style={{ left: sel.x + elW / 2, top: sel.y - 44 }}>
+                  <button className="quick-actions__btn" title="Nhân đôi" onClick={(e) => { e.stopPropagation(); duplicateElement(); }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                  <button className="quick-actions__btn" title={sel.locked ? 'Mở khóa' : 'Khóa'} onClick={(e) => { e.stopPropagation(); toggleElementLock(sel.id); }}>
+                    {sel.locked
+                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+                    }
+                  </button>
+                  <button className="quick-actions__btn" title="Lên trước" onClick={(e) => { e.stopPropagation(); bringToFront(sel.id); }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+                  </button>
+                  <button className="quick-actions__btn" title="Về sau" onClick={(e) => { e.stopPropagation(); sendToBack(sel.id); }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+                  </button>
+                  <div className="quick-actions__divider" />
+                  <button className="quick-actions__btn quick-actions__btn--danger" title="Xóa" onClick={(e) => { e.stopPropagation(); deleteSelectedElements(); }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>

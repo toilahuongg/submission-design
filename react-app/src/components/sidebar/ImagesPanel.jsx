@@ -18,6 +18,16 @@ export default function ImagesPanel() {
       <div className="image-properties">
         <div className="form-row">
           <div className="form-group form-group--half">
+            <label className="form-label">X</label>
+            <input type="number" className="form-input" value={Math.round(selectedImage.x)} onChange={(e) => updateElement(selectedElementId, { x: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="form-group form-group--half">
+            <label className="form-label">Y</label>
+            <input type="number" className="form-input" value={Math.round(selectedImage.y)} onChange={(e) => updateElement(selectedElementId, { y: parseInt(e.target.value) || 0 })} />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group form-group--half">
             <label className="form-label">Chiều rộng</label>
             <input type="number" className="form-input" value={Math.round(selectedImage.width)} min="20" max="800" onChange={(e) => updateElement(selectedElementId, { width: parseInt(e.target.value) })} />
           </div>

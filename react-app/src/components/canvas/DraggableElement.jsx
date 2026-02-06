@@ -1,8 +1,9 @@
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, memo } from 'react';
 import useDraggable from '../../hooks/useDraggable';
 import DeviceFrame from './DeviceFrame';
 import ResizeHandles from './ResizeHandles';
 import RotationHandle from './RotationHandle';
+import * as LucideIcons from 'lucide-react';
 
 function DraggableText({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
   const textRef = useRef(null);
@@ -32,9 +33,17 @@ function DraggableText({ element, isSelected, zoom, onSelect, onClick, onUpdate,
     fontStyle: element.italic ? 'italic' : 'normal',
     textAlign: element.textAlign || 'center',
     letterSpacing: element.letterSpacing ? `${element.letterSpacing}px` : '0',
+    lineHeight: element.lineHeight || 1.5,
+    opacity: element.opacity ?? 1,
     whiteSpace: 'pre-wrap',
     transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
   };
+
+  if (element.textBg?.enabled) {
+    textStyle.backgroundColor = element.textBg.color;
+    textStyle.padding = element.textBg.padding || 8;
+    textStyle.borderRadius = 4;
+  }
 
   if (element.shadow?.enabled) {
     textStyle.textShadow = `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`;
@@ -304,6 +313,9 @@ function DraggableAnnotation({ element, isSelected, zoom, onSelect, onClick, onU
 function DraggableIcon({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
   const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
+  // Get Lucide icon component if available
+  const LucideIcon = element.lucideIcon ? LucideIcons[element.lucideIcon] : null;
+
   return (
     <div
       ref={ref}
@@ -322,9 +334,17 @@ function DraggableIcon({ element, isSelected, zoom, onSelect, onClick, onUpdate,
           height: element.height,
           color: element.color,
           opacity: element.opacity,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-        dangerouslySetInnerHTML={{ __html: element.svg }}
-      />
+      >
+        {LucideIcon ? (
+          <LucideIcon size={Math.min(element.width, element.height)} strokeWidth={2} />
+        ) : element.svg ? (
+          <div dangerouslySetInnerHTML={{ __html: element.svg }} style={{ width: '100%', height: '100%' }} />
+        ) : null}
+      </div>
       {isSelected && !element.locked && (
         <>
           <ResizeHandles element={element} zoom={zoom} onResize={(updates) => { onUpdate(updates); onDragEnd?.(); }} />
@@ -384,7 +404,7 @@ function DraggableDeviceFrame({ element, isSelected, zoom, onSelect, onClick, on
   );
 }
 
-export default function DraggableElement({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+const DraggableElement = memo(function DraggableElement({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
   const commonProps = { element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd };
 
   switch (element.type) {
@@ -403,4 +423,10 @@ export default function DraggableElement({ element, isSelected, zoom, onSelect, 
     default:
       return null;
   }
-}
+}, (prev, next) => {
+  return prev.element === next.element
+    && prev.isSelected === next.isSelected
+    && prev.zoom === next.zoom;
+});
+
+export default DraggableElement;

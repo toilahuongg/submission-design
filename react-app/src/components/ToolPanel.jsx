@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy, Suspense } from 'react';
 import useEditorStore from '../store/editorStore';
 import TEMPLATES from '../data/templates';
 import { RectIcon, CircleIcon, ArrowIcon, BadgeIcon, CalloutIcon, NumberIcon, HighlightIcon, UploadIcon, NoFrameIcon } from './icons/SidebarIcons';
+
+const IconPicker = lazy(() => import('./IconPicker'));
 
 const TOOL_TITLES = {
   text: 'Văn bản',
@@ -188,17 +190,11 @@ function ImageToolContent() {
 }
 
 function IconToolContent() {
-  const { builtInIcons, addIcon } = useEditorStore();
-
   return (
-    <div className="tool-panel__body">
-      <div className="icons-grid">
-        {builtInIcons.map((icon) => (
-          <button key={icon.id} className="icon-item" onClick={() => addIcon(icon)} title={icon.name}>
-            <div dangerouslySetInnerHTML={{ __html: icon.svg }} />
-          </button>
-        ))}
-      </div>
+    <div className="tool-panel__body tool-panel__body--icons">
+      <Suspense fallback={<div className="icon-picker__empty">Đang tải icons...</div>}>
+        <IconPicker />
+      </Suspense>
     </div>
   );
 }

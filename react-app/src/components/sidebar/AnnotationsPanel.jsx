@@ -16,6 +16,16 @@ export default function AnnotationsPanel() {
   return (
     <Panel title="Chú thích" id="annotationsPanel">
       <div className="annotation-properties">
+        <div className="form-row">
+          <div className="form-group form-group--half">
+            <label className="form-label">X</label>
+            <input type="number" className="form-input" value={Math.round(selectedAnnotation.x)} onChange={(e) => updateElement(selectedElementId, { x: parseInt(e.target.value) || 0 })} />
+          </div>
+          <div className="form-group form-group--half">
+            <label className="form-label">Y</label>
+            <input type="number" className="form-input" value={Math.round(selectedAnnotation.y)} onChange={(e) => updateElement(selectedElementId, { y: parseInt(e.target.value) || 0 })} />
+          </div>
+        </div>
         <div className="form-group">
           <label className="form-label">Màu nền</label>
           <div className="color-picker">
