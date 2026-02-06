@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
 
-export default function useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, canDrag }) {
+export default function useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick, canDrag }) {
   const ref = useRef(null);
   const isDragging = useRef(false);
   const hasDragged = useRef(false);
@@ -20,16 +20,19 @@ export default function useDraggable({ element, zoom, onUpdate, onSelect, onDrag
   }, [element.x, element.y, element.locked, onSelect, canDrag]);
 
   useEffect(() => {
+    const DRAG_THRESHOLD = 4;
+
     const handleMouseMove = (e) => {
       if (!isDragging.current) return;
+      const dx = e.clientX - startPos.current.x;
+      const dy = e.clientY - startPos.current.y;
       if (!hasDragged.current) {
+        if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
         hasDragged.current = true;
         ref.current?.classList.add('dragging');
       }
-      const dx = (e.clientX - startPos.current.x) / zoom;
-      const dy = (e.clientY - startPos.current.y) / zoom;
-      const newX = Math.round(initialPos.current.x + dx);
-      const newY = Math.round(initialPos.current.y + dy);
+      const newX = Math.round(initialPos.current.x + dx / zoom);
+      const newY = Math.round(initialPos.current.y + dy / zoom);
       onUpdate({ x: newX, y: newY });
     };
 
@@ -38,6 +41,9 @@ export default function useDraggable({ element, zoom, onUpdate, onSelect, onDrag
         ref.current?.classList.remove('dragging');
         hasDragged.current = false;
         onDragEnd?.();
+      } else if (isDragging.current) {
+        // Click without drag - notify parent
+        onClick?.();
       }
       isDragging.current = false;
     };
@@ -48,7 +54,7 @@ export default function useDraggable({ element, zoom, onUpdate, onSelect, onDrag
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [zoom, onUpdate, onDragEnd]);
+  }, [zoom, onUpdate, onDragEnd, onClick]);
 
   return { ref, handleMouseDown };
 }

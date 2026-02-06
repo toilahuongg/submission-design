@@ -56,6 +56,7 @@ const useEditorStore = create((set, get) => ({
 
   // Groups
   groups: [],
+  editingGroupId: null,
 
   // History
   history: [],
@@ -244,14 +245,22 @@ const useEditorStore = create((set, get) => ({
   },
 
   selectElement: (id) => {
+    const { editingGroupId } = get();
     const group = get().getGroupForElement(id);
-    if (group) {
-      set({ selectedElementId: id, selectedElementIds: [...group.elementIds] });
-    } else {
+    if (group && editingGroupId === group.id) {
+      // Inside this group: select individual element
       set({ selectedElementId: id, selectedElementIds: [id] });
+    } else if (group) {
+      // Click on grouped element: select whole group
+      set({ selectedElementId: id, selectedElementIds: [...group.elementIds], editingGroupId: null });
+    } else {
+      set({ selectedElementId: id, selectedElementIds: [id], editingGroupId: null });
     }
   },
-  deselectElement: () => set({ selectedElementId: null, selectedElementIds: [] }),
+  enterGroup: (groupId) => {
+    set({ editingGroupId: groupId });
+  },
+  deselectElement: () => set({ selectedElementId: null, selectedElementIds: [], editingGroupId: null }),
 
   toggleSelectElement: (id) => {
     const { selectedElementIds } = get();

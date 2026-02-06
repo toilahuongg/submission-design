@@ -4,7 +4,7 @@ import DeviceFrame from './DeviceFrame';
 import ResizeHandles from './ResizeHandles';
 import RotationHandle from './RotationHandle';
 
-function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
+function DraggableText({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
   const textRef = useRef(null);
   const { ref, handleMouseDown } = useDraggable({
     element,
@@ -12,12 +12,13 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
     onUpdate,
     onSelect,
     onDragEnd,
+    onClick,
     canDrag: () => document.activeElement !== textRef.current,
   });
 
   useLayoutEffect(() => {
     if (textRef.current && document.activeElement !== textRef.current) {
-      textRef.current.textContent = element.content;
+      textRef.current.innerText = element.content;
     }
   }, [element.content]);
 
@@ -31,6 +32,7 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
     fontStyle: element.italic ? 'italic' : 'normal',
     textAlign: element.textAlign || 'center',
     letterSpacing: element.letterSpacing ? `${element.letterSpacing}px` : '0',
+    whiteSpace: 'pre-wrap',
     transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
   };
 
@@ -51,7 +53,7 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
       onMouseDown={handleMouseDown}
       contentEditable={!element.locked}
       suppressContentEditableWarning
-      onInput={(e) => onUpdate({ content: e.currentTarget.textContent })}
+      onInput={(e) => onUpdate({ content: e.currentTarget.innerText })}
       onBlur={() => onDragEnd?.()}
     >
       {isSelected && !element.locked && (
@@ -65,8 +67,8 @@ function DraggableText({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
   );
 }
 
-function DraggableShape({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd });
+function DraggableShape({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
   const getFillStyle = () => {
     if (element.fillType === 'gradient') {
@@ -100,26 +102,20 @@ function DraggableShape({ element, isSelected, zoom, onSelect, onUpdate, onDragE
         const h = element.height;
         const midY = h / 2;
 
-        // Define arrow head markers
         const renderMarkers = () => (
           <defs>
-            {/* Classic Triangle */}
             <marker id={`arrowhead-classic-${element.id}`} markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
               <polygon points="0 0, 10 3.5, 0 7" fill={fill} />
             </marker>
-            {/* Stealth */}
             <marker id={`arrowhead-stealth-${element.id}`} markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
               <path d="M0 0 L10 3.5 L0 7 L3 3.5 Z" fill={fill} />
             </marker>
-            {/* Open */}
             <marker id={`arrowhead-open-${element.id}`} markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
               <path d="M1 1 L9 5 L1 9" fill="none" stroke={fill} strokeWidth="2" strokeLinecap="round" />
             </marker>
-            {/* Circle */}
             <marker id={`arrowhead-circle-${element.id}`} markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
               <circle cx="4" cy="4" r="3" fill={fill} />
             </marker>
-            {/* Diamond */}
             <marker id={`arrowhead-diamond-${element.id}`} markerWidth="12" markerHeight="8" refX="6" refY="4" orient="auto">
               <path d="M0 4 L6 0 L12 4 L6 8 Z" fill={fill} />
             </marker>
@@ -194,8 +190,8 @@ function DraggableShape({ element, isSelected, zoom, onSelect, onUpdate, onDragE
   );
 }
 
-function DraggableImage({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd });
+function DraggableImage({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
   return (
     <div
@@ -230,8 +226,8 @@ function DraggableImage({ element, isSelected, zoom, onSelect, onUpdate, onDragE
   );
 }
 
-function DraggableAnnotation({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd });
+function DraggableAnnotation({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
   const renderAnnotation = () => {
     switch (element.annotationType) {
@@ -305,8 +301,8 @@ function DraggableAnnotation({ element, isSelected, zoom, onSelect, onUpdate, on
   );
 }
 
-function DraggableIcon({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd });
+function DraggableIcon({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
   return (
     <div
@@ -339,8 +335,8 @@ function DraggableIcon({ element, isSelected, zoom, onSelect, onUpdate, onDragEn
   );
 }
 
-function DraggableDeviceFrame({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd });
+function DraggableDeviceFrame({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const { ref, handleMouseDown } = useDraggable({ element, zoom, onUpdate, onSelect, onDragEnd, onClick });
 
   const getDimensions = () => {
     const scale = element.scale || 85;
@@ -388,8 +384,8 @@ function DraggableDeviceFrame({ element, isSelected, zoom, onSelect, onUpdate, o
   );
 }
 
-export default function DraggableElement({ element, isSelected, zoom, onSelect, onUpdate, onDragEnd }) {
-  const commonProps = { element, isSelected, zoom, onSelect, onUpdate, onDragEnd };
+export default function DraggableElement({ element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd }) {
+  const commonProps = { element, isSelected, zoom, onSelect, onClick, onUpdate, onDragEnd };
 
   switch (element.type) {
     case 'text':

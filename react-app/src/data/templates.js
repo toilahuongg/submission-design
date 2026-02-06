@@ -1,29 +1,31 @@
+// Canvas: 1600x900
+// 5 feature columns - centers at: 160, 480, 800, 1120, 1440
+
 const TEMPLATES = [
   {
     id: 'tagging-solution',
-    name: 'Giải pháp Tagging',
-    thumbnail: '#6B46C1',
+    name: 'Tagging Solution',
+    thumbnail: '#6B2D7B',
     background: {
-      type: 'gradient',
-      gradientType: 'radial',
-      gradientStart: '#FFFFFF',
-      gradientEnd: '#F5F5F5',
-      radialPosition: 'center'
+      type: 'solid',
+      color: '#FFFFFF'
     },
     elements: [
-      // App Icon (purple rounded square with tag)
+      // ===== HEADER SECTION =====
+      // App Icon background (centered header)
       {
         id: 'app-icon-bg',
         type: 'shape',
         shapeType: 'rectangle',
-        x: 596,
-        y: 55,
-        width: 48,
-        height: 48,
-        fill: '#6B46C1',
-        borderRadius: 12,
+        x: 590,
+        y: 60,
+        width: 44,
+        height: 44,
+        fill: '#6B2D7B',
+        borderRadius: 10,
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 1
       },
       {
         id: 'app-icon',
@@ -31,101 +33,110 @@ const TEMPLATES = [
         iconId: 'tag',
         svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>',
         name: 'Tag',
-        x: 608,
-        y: 67,
+        x: 600,
+        y: 70,
         width: 24,
         height: 24,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 2
       },
-      // Header text
       {
         id: 'header-text',
         type: 'text',
         content: 'SO: Auto Tags | ALL-in-One',
-        x: 654,
-        y: 62,
-        size: 26,
+        x: 644,
+        y: 68,
+        size: 22,
         weight: '700',
         italic: true,
-        color: '#1a1a1a',
+        color: '#6B2D7B',
         font: 'Instrument Sans',
-        textAlign: 'left'
+        textAlign: 'left',
+        zIndex: 3
       },
-      // Main Title
+      // Main Title (centered)
       {
         id: 'main-title',
         type: 'text',
         content: 'ALL-IN-ONE TAGGING SOLUTION',
-        x: 335,
-        y: 135,
-        size: 56,
+        x: 800,
+        y: 150,
+        size: 48,
         weight: '900',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'left',
-        letterSpacing: 1
+        textAlign: 'center',
+        letterSpacing: 1,
+        zIndex: 3
       },
-      // ========== Feature 1: All In One Tagging ==========
+
+      // ===== FEATURE 1: All In One Tagging (center: 160) =====
       {
         id: 'feat-1-circle',
         type: 'shape',
         shapeType: 'circle',
-        x: 96,
-        y: 285,
+        x: 85,
+        y: 280,
         width: 150,
         height: 150,
-        fill: '#6B46C1',
+        fill: '#6B2D7B',
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 10
       },
       {
         id: 'feat-1-icon',
         type: 'icon',
         iconId: 'tag-arrow',
-        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/><path d="M9 11l4 4m0-4l-4 4"/></svg>',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/><path d="m14 7 3 3m0-3-3 3"/></svg>',
         name: 'Tag Arrow',
-        x: 121,
-        y: 310,
+        x: 110,
+        y: 305,
         width: 100,
         height: 100,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 11
       },
       {
         id: 'feat-1-title',
         type: 'text',
         content: 'All In One\nTagging',
-        x: 95,
+        x: 160,
         y: 470,
-        size: 26,
+        size: 24,
         weight: '700',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
       {
         id: 'feat-1-desc',
         type: 'text',
         content: 'Automate tagging\norders, customers\n& products.',
-        x: 70,
-        y: 570,
-        size: 18,
+        x: 160,
+        y: 560,
+        size: 16,
         weight: '400',
         color: '#4b5563',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
-      // ========== Feature 2: Auto Triggers ==========
+
+      // ===== FEATURE 2: Auto Triggers (center: 480) =====
       {
         id: 'feat-2-circle',
         type: 'shape',
         shapeType: 'circle',
-        x: 381,
-        y: 285,
+        x: 405,
+        y: 280,
         width: 150,
         height: 150,
-        fill: '#6B46C1',
+        fill: '#6B2D7B',
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 10
       },
       {
         id: 'feat-2-icon',
@@ -133,182 +144,200 @@ const TEMPLATES = [
         iconId: 'zap',
         svg: '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg>',
         name: 'Zap',
-        x: 406,
-        y: 310,
+        x: 430,
+        y: 305,
         width: 100,
         height: 100,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 11
       },
       {
         id: 'feat-2-title',
         type: 'text',
         content: 'Auto Triggers',
-        x: 378,
+        x: 480,
         y: 470,
-        size: 26,
+        size: 24,
         weight: '700',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
       {
         id: 'feat-2-desc',
         type: 'text',
         content: 'Set real-time\nevent workflows.',
-        x: 378,
-        y: 545,
-        size: 18,
+        x: 480,
+        y: 560,
+        size: 16,
         weight: '400',
         color: '#4b5563',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
-      // ========== Feature 3: Reprocess ==========
+
+      // ===== FEATURE 3: Reprocess (center: 800) =====
       {
         id: 'feat-3-circle',
         type: 'shape',
         shapeType: 'circle',
-        x: 666,
-        y: 285,
+        x: 725,
+        y: 280,
         width: 150,
         height: 150,
-        fill: '#6B46C1',
+        fill: '#6B2D7B',
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 10
       },
       {
         id: 'feat-3-icon',
         type: 'icon',
         iconId: 'refresh',
-        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>',
         name: 'Refresh',
-        x: 691,
-        y: 310,
+        x: 750,
+        y: 305,
         width: 100,
         height: 100,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 11
       },
       {
         id: 'feat-3-title',
         type: 'text',
         content: 'Reprocess',
-        x: 680,
+        x: 800,
         y: 470,
-        size: 26,
+        size: 24,
         weight: '700',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
       {
         id: 'feat-3-desc',
         type: 'text',
         content: 'Run on existing\nentries.',
-        x: 680,
-        y: 545,
-        size: 18,
+        x: 800,
+        y: 560,
+        size: 16,
         weight: '400',
         color: '#4b5563',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
-      // ========== Feature 4: Schedule Workflows ==========
+
+      // ===== FEATURE 4: Schedule Workflows (center: 1120) =====
       {
         id: 'feat-4-circle',
         type: 'shape',
         shapeType: 'circle',
-        x: 951,
-        y: 285,
+        x: 1045,
+        y: 280,
         width: 150,
         height: 150,
-        fill: '#6B46C1',
+        fill: '#6B2D7B',
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 10
       },
       {
         id: 'feat-4-icon',
         type: 'icon',
         iconId: 'clock',
-        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
         name: 'Clock',
-        x: 976,
-        y: 310,
+        x: 1070,
+        y: 305,
         width: 100,
         height: 100,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 11
       },
       {
         id: 'feat-4-title',
         type: 'text',
         content: 'Schedule\nWorkflows',
-        x: 960,
+        x: 1120,
         y: 470,
-        size: 26,
+        size: 24,
         weight: '700',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
       {
         id: 'feat-4-desc',
         type: 'text',
         content: 'Daily, weekly,\nmonthly runs.',
-        x: 968,
-        y: 570,
-        size: 18,
+        x: 1120,
+        y: 560,
+        size: 16,
         weight: '400',
         color: '#4b5563',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
-      // ========== Feature 5: Workflow Library ==========
+
+      // ===== FEATURE 5: Workflow Library (center: 1440) =====
       {
         id: 'feat-5-circle',
         type: 'shape',
         shapeType: 'circle',
-        x: 1236,
-        y: 285,
+        x: 1365,
+        y: 280,
         width: 150,
         height: 150,
-        fill: '#6B46C1',
+        fill: '#6B2D7B',
         strokeWidth: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: 10
       },
       {
         id: 'feat-5-icon',
         type: 'icon',
         iconId: 'folder',
-        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h5"/></svg>',
         name: 'Folder',
-        x: 1261,
-        y: 310,
+        x: 1390,
+        y: 305,
         width: 100,
         height: 100,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        zIndex: 11
       },
       {
         id: 'feat-5-title',
         type: 'text',
         content: 'Workflow\nLibrary',
-        x: 1258,
+        x: 1440,
         y: 470,
-        size: 26,
+        size: 24,
         weight: '700',
         color: '#1a1a1a',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       },
       {
         id: 'feat-5-desc',
         type: 'text',
         content: 'Access pre-built\ntemplates.',
-        x: 1253,
-        y: 570,
-        size: 18,
+        x: 1440,
+        y: 560,
+        size: 16,
         weight: '400',
         color: '#4b5563',
         font: 'Instrument Sans',
-        textAlign: 'center'
+        textAlign: 'center',
+        zIndex: 12
       }
     ]
   }

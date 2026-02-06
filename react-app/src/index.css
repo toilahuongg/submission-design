@@ -2063,22 +2063,104 @@ input[type="checkbox"] {
   position: absolute;
   z-index: 100;
   pointer-events: none;
+  background: #ff4488;
+  opacity: 0.9;
 }
 
-.snap-line--horizontal {
-  left: 0;
-  right: 0;
+/* Distance Measurements */
+.distance-measurement {
+  position: absolute;
+  z-index: 101;
+  pointer-events: none;
+}
+
+.distance-measurement--h {
+  display: flex;
+  align-items: center;
+}
+
+.distance-measurement--h .distance-line {
+  width: 100%;
   height: 1px;
-  background: #ff4444;
-  opacity: 0.8;
+  background: #ff4488;
 }
 
-.snap-line--vertical {
-  top: 0;
-  bottom: 0;
+.distance-measurement--h .distance-cap--start,
+.distance-measurement--h .distance-cap--end {
+  position: absolute;
+  top: -4px;
   width: 1px;
-  background: #ff4444;
-  opacity: 0.8;
+  height: 9px;
+  background: #ff4488;
+}
+
+.distance-measurement--h .distance-cap--start { left: 0; }
+.distance-measurement--h .distance-cap--end { right: 0; }
+
+.distance-measurement--h .distance-label {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.distance-measurement--v {
+  display: flex;
+  justify-content: center;
+}
+
+.distance-measurement--v .distance-line {
+  height: 100%;
+  width: 1px;
+  background: #ff4488;
+}
+
+.distance-measurement--v .distance-cap--start,
+.distance-measurement--v .distance-cap--end {
+  position: absolute;
+  left: -4px;
+  height: 1px;
+  width: 9px;
+  background: #ff4488;
+}
+
+.distance-measurement--v .distance-cap--start { top: 0; }
+.distance-measurement--v .distance-cap--end { bottom: 0; }
+
+.distance-measurement--v .distance-label {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.distance-label {
+  background: #ff4488;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  line-height: 1.4;
+  font-family: 'JetBrains Mono', monospace;
+  animation: distance-fade-in 0.1s ease-out;
+}
+
+@keyframes distance-fade-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Equal Spacing Indicators */
+.distance-measurement--equal .distance-line,
+.distance-measurement--equal .distance-cap--start,
+.distance-measurement--equal .distance-cap--end {
+  background: #b44dff;
+}
+
+.distance-measurement--equal .distance-label {
+  background: #b44dff;
 }
 
 /* Guide Lines */
