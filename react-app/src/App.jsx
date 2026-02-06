@@ -3,7 +3,7 @@ import useEditorStore from './store/editorStore';
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts';
 import Header from './components/Header';
 import ToolbarSidebar from './components/ToolbarSidebar';
-import TemplateSidebar from './components/TemplateSidebar';
+import ToolPanel from './components/ToolPanel';
 import PropertiesSidebar from './components/PropertiesSidebar';
 import Canvas from './components/Canvas';
 import ExportModal from './components/ExportModal';
@@ -46,7 +46,7 @@ function App() {
       <Header />
       <div className="workspace">
         <ToolbarSidebar />
-        <TemplateSidebar />
+        <ToolPanel />
         <Canvas />
         {showPropertiesSidebar && <PropertiesSidebar />}
       </div>

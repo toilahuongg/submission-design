@@ -9,7 +9,6 @@ const tools = [
         <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
       </svg>
     ),
-    action: (state) => state.deselectElement(),
   },
   {
     id: 'text',
@@ -19,7 +18,6 @@ const tools = [
         <path d="M4 7V4h16v3M9 20h6M12 4v16" />
       </svg>
     ),
-    action: (state) => state.addText(),
   },
   {
     id: 'shape',
@@ -29,7 +27,6 @@ const tools = [
         <rect x="3" y="5" width="18" height="14" rx="2" />
       </svg>
     ),
-    action: (state) => state.addShape('rectangle'),
   },
   {
     id: 'device',
@@ -41,7 +38,17 @@ const tools = [
         <line x1="12" y1="17" x2="12" y2="21" />
       </svg>
     ),
-    action: (state) => state.addDevice('browser'),
+  },
+  {
+    id: 'image',
+    label: 'Hình ảnh',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+    ),
   },
   {
     id: 'annotation',
@@ -52,7 +59,6 @@ const tools = [
         <path d="M8 15l4 6 4-6" />
       </svg>
     ),
-    action: (state) => state.addAnnotation('callout'),
   },
   {
     id: 'icon',
@@ -62,7 +68,6 @@ const tools = [
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
       </svg>
     ),
-    action: (state) => state.addIcon(state.builtInIcons[0]),
   },
   {
     id: 'templates',
@@ -75,18 +80,30 @@ const tools = [
         <rect x="14" y="14" width="7" height="7" />
       </svg>
     ),
-    action: (state) => state.toggleTemplateSidebar(),
   },
 ];
 
 export default function ToolbarSidebar() {
+  const activeTool = useEditorStore((s) => s.activeTool);
+  const setActiveTool = useEditorStore((s) => s.setActiveTool);
+  const deselectElement = useEditorStore((s) => s.deselectElement);
+
+  const handleClick = (toolId) => {
+    if (toolId === 'select') {
+      deselectElement();
+      setActiveTool(null);
+    } else {
+      setActiveTool(toolId);
+    }
+  };
+
   return (
     <aside className="toolbar-sidebar">
       {tools.map((tool) => (
         <button
           key={tool.id}
-          className="toolbar-sidebar__btn"
-          onClick={() => tool.action(useEditorStore.getState())}
+          className={`toolbar-sidebar__btn ${activeTool === tool.id ? 'active' : ''}`}
+          onClick={() => handleClick(tool.id)}
           title={tool.label}
         >
           {tool.icon}

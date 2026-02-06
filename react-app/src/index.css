@@ -2605,6 +2605,121 @@ input[type="checkbox"] {
   color: white;
 }
 
+/* ============ TOOL PANEL ============ */
+.tool-panel {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  animation: toolPanelIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toolPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.tool-panel .sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tool-panel__body {
+  padding: 0;
+}
+
+.tool-panel__section {
+  margin-top: var(--space-lg);
+}
+
+.tool-panel__presets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.tool-panel__preset-btn {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.tool-panel__preset-btn:hover {
+  border-color: var(--accent-primary);
+  background: rgba(92, 106, 196, 0.1);
+}
+
+.tool-panel__grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.tool-panel__grid--2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tool-panel__grid--3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.tool-panel__grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.tool-panel__grid-item:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(92, 106, 196, 0.1);
+}
+
+/* Sidebar Hint */
+.sidebar__hint {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: var(--space-lg) var(--space-md);
+  line-height: 1.6;
+}
+
+/* Context-aware sidebar fade-in */
+.sidebar__content > * {
+  animation: sidebarFadeIn 0.2s ease forwards;
+}
+
+@keyframes sidebarFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ============ TEMPLATE SIDEBAR ============ */
 .template-sidebar {
   width: var(--sidebar-width);

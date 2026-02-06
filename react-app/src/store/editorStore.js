@@ -67,6 +67,7 @@ const useEditorStore = create((set, get) => ({
   showPropertiesSidebar: true,
   showTemplateSidebar: false,
   showShortcutsModal: false,
+  activeTool: null,
   toast: null,
 
   // Rulers & Guides
@@ -852,6 +853,11 @@ const useEditorStore = create((set, get) => ({
   setShowPropertiesSidebar: (show) => set({ showPropertiesSidebar: show }),
   toggleTemplateSidebar: () => set((state) => ({ showTemplateSidebar: !state.showTemplateSidebar })),
   setShowTemplateSidebar: (show) => set({ showTemplateSidebar: show }),
+
+  // ============ ACTIVE TOOL ============
+  setActiveTool: (tool) => set((state) => ({
+    activeTool: state.activeTool === tool ? null : tool
+  })),
 
   // ============ SHORTCUTS MODAL ============
   setShowShortcutsModal: (show) => set({ showShortcutsModal: show }),
