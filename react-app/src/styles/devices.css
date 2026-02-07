@@ -1,0 +1,641 @@
+/* =============================================
+   Device Frames & Mini Mockups
+   ============================================= */
+
+/* Device Grid */
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.device-option {
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.device-option:hover {
+  border-color: var(--border-emphasis);
+  background: var(--bg-hover);
+}
+
+.device-option.active {
+  border-color: var(--accent-primary);
+  background: rgba(92, 106, 196, 0.1);
+}
+
+.device-option span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+.device-preview {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+
+/* Mini Device Mockups */
+.mock-browser-mini {
+  width: 48px;
+  height: 32px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  position: relative;
+}
+
+.mock-browser-mini::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px 4px 0 0;
+}
+
+.mock-browser-mini::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 12px;
+  height: 2px;
+  background: var(--border-default);
+  border-radius: 1px;
+}
+
+.mock-laptop-mini {
+  width: 52px;
+  height: 32px;
+  background: var(--bg-elevated);
+  border-radius: 2px 2px 0 0;
+  position: relative;
+}
+
+.mock-laptop-mini::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+  height: 4px;
+  background: var(--border-emphasis);
+  border-radius: 0 0 4px 4px;
+}
+
+.mock-desktop-mini {
+  width: 48px;
+  height: 28px;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-emphasis);
+  border-radius: 2px;
+  position: relative;
+}
+
+.mock-desktop-mini::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background: var(--border-emphasis);
+  border-radius: 0 0 2px 2px;
+}
+
+.mock-iphone-mini {
+  width: 24px;
+  height: 48px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  position: relative;
+  border: 1.5px solid var(--border-emphasis);
+}
+
+.mock-iphone-mini::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 3px;
+  background: var(--border-default);
+  border-radius: 1.5px;
+}
+
+.mock-android-mini {
+  width: 24px;
+  height: 44px;
+  background: var(--bg-elevated);
+  border-radius: 6px;
+  position: relative;
+  border: 1.5px solid var(--border-emphasis);
+}
+
+.mock-android-mini::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  background: var(--border-default);
+  border-radius: 50%;
+}
+
+.mock-ipad-mini {
+  width: 36px;
+  height: 28px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  border: 2px solid var(--border-emphasis);
+  position: relative;
+}
+
+.mock-ipad-mini::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 3px;
+  background: var(--border-default);
+  border-radius: 50%;
+}
+
+.mock-tablet-mini {
+  width: 32px;
+  height: 24px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  border: 2px solid var(--border-emphasis);
+  position: relative;
+}
+
+.mock-tablet-mini::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 3px;
+  background: var(--border-default);
+  border-radius: 50%;
+}
+
+/* =============================================
+   Full Device Frames
+   ============================================= */
+
+/* Device Frame Base */
+.device-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all var(--transition-normal);
+}
+
+/* Browser Frame */
+.device-frame--browser {
+  background: #1E1E1E;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.device-frame--browser .browser-bar {
+  height: 40px;
+  background: #2D2D2D;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 8px;
+}
+
+.browser-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.browser-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.browser-dot--red {
+  background: #FF5F57;
+}
+
+.browser-dot--yellow {
+  background: #FFBD2E;
+}
+
+.browser-dot--green {
+  background: #28CA41;
+}
+
+.browser-address {
+  flex: 1;
+  margin-left: 16px;
+  height: 26px;
+  background: #1E1E1E;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #888;
+}
+
+.device-frame--browser .browser-content {
+  background: white;
+  overflow: hidden;
+}
+
+.device-frame--browser .browser-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Laptop Frame */
+.device-frame--laptop {
+  background: transparent;
+}
+
+.laptop-hardware {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.laptop-screen-container {
+  background: #000;
+  border-radius: 20px 20px 0 0;
+  padding: 10px;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.laptop-camera {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: #333;
+  border-radius: 50%;
+}
+
+.laptop-screen {
+  background: #f6f6f7;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.laptop-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.laptop-base {
+  width: 110%;
+  height: 12px;
+  background: linear-gradient(to bottom, #d1d5db, #9ca3af);
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  margin-top: -2px;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.laptop-trackpad {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 4px 4px;
+}
+
+/* Desktop Frame */
+.device-frame--desktop .monitor-bezel {
+  background: #1E1E1E;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.device-frame--desktop .monitor-screen {
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.device-frame--desktop .monitor-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.device-frame--desktop .monitor-stand {
+  width: 80px;
+  height: 60px;
+  background: linear-gradient(to bottom, #2D2D2D, #1E1E1E);
+  margin: 0 auto;
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+}
+
+.device-frame--desktop .monitor-base {
+  width: 120px;
+  height: 12px;
+  background: #1E1E1E;
+  border-radius: 6px;
+  margin: 0 auto;
+}
+
+/* iPhone Frame */
+.device-frame--iphone {
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.iphone-body {
+  background: #1a1523;
+  border-radius: 54px;
+  padding: 8px;
+  position: relative;
+  border: 1px solid #2a243a;
+  box-shadow:
+    0 0 0 1px #3a344a,
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.iphone-dynamic-island {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 20px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 20;
+}
+
+.iphone-screen {
+  background: #fff;
+  border-radius: 46px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.iphone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iphone-home-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  z-index: 15;
+}
+
+.iphone-side-buttons {
+  position: absolute;
+  left: -2.5px;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.iphone-power-button {
+  position: absolute;
+  right: -2.5px;
+  top: 160px;
+  width: 3px;
+  height: 60px;
+  background: #2a243a;
+  border-radius: 0 2px 2px 0;
+  border: 1px solid #1a1523;
+  border-left: none;
+}
+
+.iphone-button {
+  width: 3px;
+  background: #2a243a;
+  border-radius: 2px 0 0 2px;
+  border: 1px solid #1a1523;
+  border-right: none;
+}
+
+.iphone-button--silent {
+  height: 20px;
+}
+
+.iphone-button--volume-up,
+.iphone-button--volume-down {
+  height: 40px;
+}
+
+/* Android Frame */
+.device-frame--android {
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.android-body {
+  background: #0a0a0a;
+  border-radius: 36px;
+  padding: 8px;
+  position: relative;
+  border: 1px solid #222;
+  box-shadow:
+    0 0 0 1px #333,
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.android-camera-punch {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background: #000;
+  border-radius: 50%;
+  z-index: 20;
+  border: 1.5px solid #1a1a1a;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.android-screen {
+  background: #f0f0f0;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.android-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.android-side-buttons {
+  position: absolute;
+  left: -2px;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 0;
+}
+
+.android-button {
+  width: 3px;
+  background: #1a1a1a;
+  border-radius: 2px 0 0 2px;
+  border: 1px solid #000;
+  border-right: none;
+  box-shadow: -1px 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.android-button--volume {
+  height: 50px;
+}
+
+.android-button--power {
+  height: 30px;
+}
+
+/* iPad Frame */
+.device-frame--ipad {
+  background: transparent;
+}
+
+.ipad-body {
+  background: #1a1a1a;
+  border-radius: 32px;
+  padding: 12px;
+  position: relative;
+  border: 1px solid #333;
+  box-shadow:
+    0 0 0 1px #444,
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.ipad-camera {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: #222;
+  border-radius: 50%;
+  z-index: 20;
+}
+
+.ipad-screen {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ipad-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Tablet Frame */
+.device-frame--tablet {
+  background: transparent;
+}
+
+.tablet-body {
+  background: #111;
+  border-radius: 20px;
+  padding: 10px;
+  position: relative;
+  border: 1px solid #222;
+  box-shadow:
+    0 0 0 1px #333,
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.tablet-camera {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: #222;
+  border-radius: 50%;
+  z-index: 20;
+}
+
+.tablet-screen {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tablet-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

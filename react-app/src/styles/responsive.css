@@ -1,0 +1,43 @@
+/* =============================================
+   Responsive Styles
+   ============================================= */
+
+@media (max-width: 1400px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+
+  .device-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1400px) {
+  .sidebar {
+    width: 220px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .sidebar--left {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar--right {
+    position: fixed;
+    right: 0;
+    top: var(--header-height);
+    height: calc(100vh - var(--header-height));
+    z-index: 90;
+    width: 280px;
+    transform: translateX(100%);
+    transition: transform var(--transition-normal);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar--right.open {
+    transform: translateX(0);
+  }
+}

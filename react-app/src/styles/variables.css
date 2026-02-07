@@ -1,0 +1,60 @@
+/* =============================================
+   SHOPIFY SCREENSHOT EDITOR - Design Tokens
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+:root {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1A1A1A;
+  --bg-elevated: #1F1F1F;
+  --bg-hover: #252525;
+
+  --border-subtle: #2A2A2A;
+  --border-default: #333333;
+  --border-emphasis: #404040;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
+  --text-tertiary: #666666;
+
+  --accent-primary: #5C6AC4;
+  --accent-primary-hover: #6E7AD8;
+  --accent-success: #008060;
+  --accent-warning: #F49342;
+  --accent-danger: #D82C0D;
+
+  --shopify-green: #008060;
+  --shopify-purple: #5C6AC4;
+  --shopify-indigo: #202E78;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  --font-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --header-height: 56px;
+  --sidebar-width: 280px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-device: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-spring: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

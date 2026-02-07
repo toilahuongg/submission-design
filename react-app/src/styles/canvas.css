@@ -1,0 +1,263 @@
+/* =============================================
+   Canvas Area & Elements
+   ============================================= */
+
+.canvas-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  background-image:
+    radial-gradient(circle at 1px 1px, var(--border-subtle) 1px, transparent 0);
+  background-size: 20px 20px;
+  position: relative;
+  min-width: 0;
+  /* Fix flex overflow */
+}
+
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  overflow: auto;
+  min-width: 0;
+  /* Fix flex overflow */
+}
+
+.canvas {
+  width: 1600px;
+  height: 900px;
+  flex-shrink: 0;
+  background: var(--shopify-purple);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  transform-origin: center center;
+  transition: transform var(--transition-normal);
+}
+
+.canvas__content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.canvas__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size:
+    50px 50px,
+    50px 50px,
+    100px 100px,
+    100px 100px;
+}
+
+.canvas__background {
+  position: absolute;
+  inset: -20px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.canvas-info {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: rgba(31, 31, 31, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.zoom-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.zoom-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.zoom-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.zoom-btn--fit {
+  font-size: 0.75rem;
+}
+
+/* Canvas Elements */
+.canvas-element {
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+
+.canvas-element:not(.selected):not(.locked):hover {
+  outline: 1px solid rgba(92, 106, 196, 0.4);
+  outline-offset: 2px;
+}
+
+.canvas-element.selected {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(92, 106, 196, 0.12);
+}
+
+.canvas-element.dragging {
+  cursor: grabbing;
+  opacity: 0.85;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.canvas-element.locked {
+  cursor: default !important;
+}
+
+.canvas-element.locked .resize-handle,
+.canvas-element.locked .rotation-handle {
+  display: none;
+}
+
+.canvas-text {
+  padding: 8px;
+  min-width: 100px;
+  min-height: 30px;
+}
+
+.canvas-text:focus {
+  outline: none;
+}
+
+/* Canvas Shapes, Images, Annotations */
+.canvas-shape,
+.canvas-image,
+.canvas-annotation {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+/* Canvas Icon */
+.canvas-icon {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.canvas-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Shapes */
+.shape-buttons {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.shape-btn {
+  flex: 1;
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.shape-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(92, 106, 196, 0.1);
+}
+
+/* Annotations */
+.annotation-callout {
+  position: relative;
+}
+
+.annotation-callout .callout-body {
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.annotation-callout .callout-pointer {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid;
+}
+
+.annotation-number {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.annotation-highlight {
+  border-radius: var(--radius-md);
+}
+
+/* Group Bounding Box */
+.group-bbox {
+  border: 2px dashed rgba(92, 106, 196, 0.5);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  z-index: 5;
+  background: rgba(92, 106, 196, 0.03);
+}

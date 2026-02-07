@@ -1,0 +1,111 @@
+/* =============================================
+   Header Component
+   ============================================= */
+
+.header {
+  height: var(--header-height);
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.95) 0%, rgba(20, 20, 20, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  flex-shrink: 0;
+  z-index: 100;
+  position: relative;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.header__logo {
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+}
+
+.header__title {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.header__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  padding: 3px 10px;
+  background: rgba(92, 106, 196, 0.12);
+  border: 1px solid rgba(92, 106, 196, 0.2);
+  border-radius: 20px;
+  color: var(--accent-primary);
+  letter-spacing: 0.02em;
+}
+
+.header__center {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header__history-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.header__history-group .btn {
+  position: relative;
+}
+
+.header__badge-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--accent-primary);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-family: var(--font-mono);
+}
+
+.header__zoom-info {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  min-width: 48px;
+  text-align: center;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.header__divider {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, transparent, var(--border-default), transparent);
+  margin: 0 var(--space-sm);
+}
