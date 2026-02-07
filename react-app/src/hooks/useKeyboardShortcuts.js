@@ -47,6 +47,8 @@ export default function useKeyboardShortcuts() {
         return;
       }
 
+      // Note: Image paste from system clipboard is handled by 'paste' event below
+      // This only handles internal element clipboard
       if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
         if (!isInInput && state.clipboard) {
           e.preventDefault();
@@ -128,7 +130,48 @@ export default function useKeyboardShortcuts() {
       }
     };
 
+    // Handle paste event for images (more reliable cross-browser)
+    const handlePaste = (e) => {
+      const isInInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable;
+      if (isInInput) return;
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          const blob = item.getAsFile();
+          if (blob) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const img = new Image();
+              img.onload = () => {
+                const state = useEditorStore.getState();
+                let width = img.width;
+                let height = img.height;
+                const maxSize = 800;
+                if (width > maxSize || height > maxSize) {
+                  const ratio = Math.min(maxSize / width, maxSize / height);
+                  width = Math.round(width * ratio);
+                  height = Math.round(height * ratio);
+                }
+                state.addImageOverlay(event.target.result, width, height);
+              };
+              img.src = event.target.result;
+            };
+            reader.readAsDataURL(blob);
+          }
+          return;
+        }
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('paste', handlePaste);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('paste', handlePaste);
+    };
   }, []);
 }

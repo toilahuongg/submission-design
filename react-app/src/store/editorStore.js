@@ -591,6 +591,7 @@ const useEditorStore = create((set, get) => ({
       id,
       type: 'icon',
       iconId: iconData.id,
+      lucideIcon: iconData.lucideIcon,
       svg: iconData.svg,
       name: iconData.name,
       x: 800,
