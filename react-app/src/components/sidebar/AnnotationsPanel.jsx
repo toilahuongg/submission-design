@@ -73,7 +73,13 @@ export default function AnnotationsPanel() {
           <span className="range-value">{Math.round(selectedAnnotation.opacity * 100)}%</span>
         </div>
 
-        <RotationControls elementId={selectedElementId} rotation={selectedAnnotation.rotation || 0} />
+        <RotationControls
+          elementId={selectedElementId}
+          rotation={selectedAnnotation.rotation || 0}
+          rotateX={selectedAnnotation.rotateX || 0}
+          rotateY={selectedAnnotation.rotateY || 0}
+          rotateZ={selectedAnnotation.rotateZ}
+        />
 
         <button className="btn btn--danger btn--block" onClick={() => deleteElement(selectedElementId)}>
           <TrashIcon /> Xóa chú thích

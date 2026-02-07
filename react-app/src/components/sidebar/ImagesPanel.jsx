@@ -43,7 +43,13 @@ export default function ImagesPanel() {
           <span className="range-value">{Math.round(selectedImage.opacity * 100)}%</span>
         </div>
 
-        <RotationControls elementId={selectedElementId} rotation={selectedImage.rotation || 0} />
+        <RotationControls
+          elementId={selectedElementId}
+          rotation={selectedImage.rotation || 0}
+          rotateX={selectedImage.rotateX || 0}
+          rotateY={selectedImage.rotateY || 0}
+          rotateZ={selectedImage.rotateZ}
+        />
 
         <button className="btn btn--danger btn--block" onClick={() => deleteElement(selectedElementId)}>
           <TrashIcon /> Xóa hình ảnh

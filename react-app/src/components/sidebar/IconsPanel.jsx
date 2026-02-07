@@ -51,7 +51,13 @@ export default function IconsPanel() {
           <span className="range-value">{Math.round(selectedIcon.opacity * 100)}%</span>
         </div>
 
-        <RotationControls elementId={selectedElementId} rotation={selectedIcon.rotation || 0} />
+        <RotationControls
+          elementId={selectedElementId}
+          rotation={selectedIcon.rotation || 0}
+          rotateX={selectedIcon.rotateX || 0}
+          rotateY={selectedIcon.rotateY || 0}
+          rotateZ={selectedIcon.rotateZ}
+        />
 
         <button className="btn btn--danger btn--block" onClick={() => deleteElement(selectedElementId)}>
           <TrashIcon /> Xóa biểu tượng

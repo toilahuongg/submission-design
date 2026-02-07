@@ -1,7 +1,8 @@
 import { useRef, useCallback } from 'react';
 
-export default function ResizeHandles({ element, zoom, onResize }) {
-  const handles = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+export default function ResizeHandles({ element, zoom, onResize, restrictHandles }) {
+  const allHandles = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+  const handles = restrictHandles ? allHandles.filter(h => restrictHandles.includes(h)) : allHandles;
   const isResizing = useRef(false);
   const startData = useRef(null);
 

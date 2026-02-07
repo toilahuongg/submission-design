@@ -167,6 +167,12 @@
   outline: none;
 }
 
+.canvas-text.has-gradient {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 /* Canvas Shapes, Images, Annotations */
 .canvas-shape,
 .canvas-image,

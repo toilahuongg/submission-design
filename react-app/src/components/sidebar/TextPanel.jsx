@@ -1,5 +1,5 @@
 import useEditorStore from '../../store/editorStore';
-import { TrashIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon } from '../icons/SidebarIcons';
+import { TrashIcon, AlignLeftIcon, AlignCenterIcon, AlignRightIcon, UnderlineIcon, StrikethroughIcon, UppercaseIcon, GradientIcon, GlowIcon, WidthIcon } from '../icons/SidebarIcons';
 import Panel from './Panel';
 import RotationControls from './RotationControls';
 
@@ -131,7 +131,13 @@ export default function TextPanel() {
           )}
         </div>
 
-        <RotationControls elementId={selectedElementId} rotation={selectedText.rotation || 0} />
+        <RotationControls
+          elementId={selectedElementId}
+          rotation={selectedText.rotation || 0}
+          rotateX={selectedText.rotateX || 0}
+          rotateY={selectedText.rotateY || 0}
+          rotateZ={selectedText.rotateZ}
+        />
 
         <div className="form-group">
           <label className="form-label">
@@ -166,6 +172,96 @@ export default function TextPanel() {
               <div className="form-group">
                 <label className="form-label">Độ dày</label>
                 <input type="range" min="1" max="5" value={selectedText.outline?.width || 1} onChange={(e) => updateElement(selectedElementId, { outline: { ...selectedText.outline, width: parseInt(e.target.value) } })} onMouseUp={() => saveState()} />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Kiểu trang trí</label>
+          <div className="btn-group">
+            <button className={`btn-group__item ${(selectedText.textDecoration || 'none') === 'none' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textDecoration: 'none' })}>Không</button>
+            <button className={`btn-group__item ${selectedText.textDecoration === 'underline' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textDecoration: 'underline' })} title="Gạch chân"><UnderlineIcon /></button>
+            <button className={`btn-group__item ${selectedText.textDecoration === 'line-through' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textDecoration: 'line-through' })} title="Gạch ngang"><StrikethroughIcon /></button>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Biến đổi chữ</label>
+          <div className="btn-group">
+            <button className={`btn-group__item ${(selectedText.textTransform || 'none') === 'none' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textTransform: 'none' })}>Không</button>
+            <button className={`btn-group__item ${selectedText.textTransform === 'uppercase' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textTransform: 'uppercase' })} title="IN HOA"><UppercaseIcon /></button>
+            <button className={`btn-group__item ${selectedText.textTransform === 'lowercase' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textTransform: 'lowercase' })} title="chữ thường">aa</button>
+            <button className={`btn-group__item ${selectedText.textTransform === 'capitalize' ? 'active' : ''}`} onClick={() => updateElementWithHistory(selectedElementId, { textTransform: 'capitalize' })} title="Viết Hoa Đầu">Aa</button>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Khoảng cách từ</label>
+          <input type="range" min="-5" max="20" value={selectedText.wordSpacing || 0} onChange={(e) => updateElement(selectedElementId, { wordSpacing: parseInt(e.target.value) })} onMouseUp={() => saveState()} />
+          <span className="range-value">{selectedText.wordSpacing || 0}px</span>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            <input type="checkbox" checked={(selectedText.maxWidth || 0) > 0} onChange={(e) => updateElementWithHistory(selectedElementId, { maxWidth: e.target.checked ? 600 : 0 })} />
+            <WidthIcon /> Giới hạn chiều rộng
+          </label>
+          {(selectedText.maxWidth || 0) > 0 && (
+            <div className="sub-controls">
+              <div className="form-group">
+                <label className="form-label">Chiều rộng tối đa</label>
+                <input type="range" min="200" max="1200" value={selectedText.maxWidth || 600} onChange={(e) => updateElement(selectedElementId, { maxWidth: parseInt(e.target.value) })} onMouseUp={() => saveState()} />
+                <span className="range-value">{selectedText.maxWidth || 600}px</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            <input type="checkbox" checked={selectedText.gradient?.enabled || false} onChange={(e) => updateElementWithHistory(selectedElementId, { gradient: { ...selectedText.gradient, enabled: e.target.checked, start: selectedText.gradient?.start || '#5C6AC4', end: selectedText.gradient?.end || '#202E78', angle: selectedText.gradient?.angle ?? 135 } })} />
+            <GradientIcon /> Chữ gradient
+          </label>
+          {selectedText.gradient?.enabled && (
+            <div className="sub-controls">
+              <div className="color-picker">
+                <input type="color" value={selectedText.gradient?.start || '#5C6AC4'} onChange={(e) => updateElement(selectedElementId, { gradient: { ...selectedText.gradient, start: e.target.value } })} />
+                <span className="color-label">Màu đầu</span>
+              </div>
+              <div className="color-picker">
+                <input type="color" value={selectedText.gradient?.end || '#202E78'} onChange={(e) => updateElement(selectedElementId, { gradient: { ...selectedText.gradient, end: e.target.value } })} />
+                <span className="color-label">Màu cuối</span>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Góc</label>
+                <input type="range" min="0" max="360" value={selectedText.gradient?.angle ?? 135} onChange={(e) => updateElement(selectedElementId, { gradient: { ...selectedText.gradient, angle: parseInt(e.target.value) } })} onMouseUp={() => saveState()} />
+                <span className="range-value">{selectedText.gradient?.angle ?? 135}°</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            <input type="checkbox" checked={selectedText.glow?.enabled || false} onChange={(e) => updateElementWithHistory(selectedElementId, { glow: { ...selectedText.glow, enabled: e.target.checked, color: selectedText.glow?.color || '#5C6AC4', blur: selectedText.glow?.blur ?? 10, intensity: selectedText.glow?.intensity ?? 2 } })} />
+            <GlowIcon /> Hiệu ứng phát sáng
+          </label>
+          {selectedText.glow?.enabled && (
+            <div className="sub-controls">
+              <div className="color-picker">
+                <input type="color" value={selectedText.glow?.color || '#5C6AC4'} onChange={(e) => updateElement(selectedElementId, { glow: { ...selectedText.glow, color: e.target.value } })} />
+                <span className="color-label">Màu sáng</span>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Độ mờ</label>
+                <input type="range" min="0" max="30" value={selectedText.glow?.blur ?? 10} onChange={(e) => updateElement(selectedElementId, { glow: { ...selectedText.glow, blur: parseInt(e.target.value) } })} onMouseUp={() => saveState()} />
+                <span className="range-value">{selectedText.glow?.blur ?? 10}px</span>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Cường độ</label>
+                <input type="range" min="1" max="5" value={selectedText.glow?.intensity ?? 2} onChange={(e) => updateElement(selectedElementId, { glow: { ...selectedText.glow, intensity: parseInt(e.target.value) } })} onMouseUp={() => saveState()} />
+                <span className="range-value">{selectedText.glow?.intensity ?? 2}</span>
               </div>
             </div>
           )}

@@ -3,7 +3,10 @@ import { memo } from 'react';
 const DeviceFrame = memo(function DeviceFrame({ type, scale, shadow, screenshot }) {
   const baseWidth = 1200 * (scale / 100);
   const baseHeight = 720 * (scale / 100);
-  const shadowStyle = { boxShadow: `0 ${shadow / 2}px ${shadow}px rgba(0,0,0,${shadow / 100})` };
+  // Use drop-shadow filter instead of box-shadow to follow border-radius
+  const shadowStyle = shadow > 0
+    ? { filter: `drop-shadow(0 ${shadow / 3}px ${shadow / 2}px rgba(0,0,0,${Math.min(shadow / 150, 0.5)}))` }
+    : {};
 
   const placeholder = (
     <div style={{

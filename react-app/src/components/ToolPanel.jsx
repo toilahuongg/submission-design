@@ -1,7 +1,10 @@
 import { useState, useRef, lazy, Suspense } from 'react';
 import useEditorStore from '../store/editorStore';
 import TEMPLATES from '../data/templates';
-import { RectIcon, CircleIcon, ArrowIcon, BadgeIcon, CalloutIcon, NumberIcon, HighlightIcon, UploadIcon, NoFrameIcon } from './icons/SidebarIcons';
+import {
+  RectIcon, CircleIcon, ArrowIcon, BadgeIcon, CalloutIcon, NumberIcon, HighlightIcon, UploadIcon, NoFrameIcon,
+  TriangleIcon, StarIcon, PentagonIcon, HexagonIcon, DiamondIcon, LineIcon, CalloutBubbleIcon, HeartIcon, CrossIcon
+} from './icons/SidebarIcons';
 
 const IconPicker = lazy(() => import('./IconPicker'));
 
@@ -14,6 +17,99 @@ const TOOL_TITLES = {
   annotation: 'Chú thích',
   templates: 'Mẫu thiết kế',
 };
+
+const TEXT_STYLE_TEMPLATES = [
+  {
+    label: 'Heading Bold',
+    preview: { fontWeight: '700', fontSize: '1.25rem', color: '#fff' },
+    props: { content: 'Heading Bold', size: 64, weight: '700', color: '#FFFFFF', font: 'Instrument Sans', letterSpacing: 0 },
+  },
+  {
+    label: 'Subtitle Light',
+    preview: { fontWeight: '400', fontSize: '1rem', color: '#ccc' },
+    props: { content: 'Subtitle Light', size: 36, weight: '400', color: '#E0E0E0', font: 'Instrument Sans', letterSpacing: 1 },
+  },
+  {
+    label: 'Gradient Title',
+    preview: { fontWeight: '700', fontSize: '1.1rem', background: 'linear-gradient(135deg, #5C6AC4, #202E78)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+    props: { content: 'Gradient Title', size: 56, weight: '700', font: 'Instrument Sans', gradient: { enabled: true, start: '#5C6AC4', end: '#202E78', angle: 135 } },
+  },
+  {
+    label: 'Glow Neon',
+    preview: { fontWeight: '700', fontSize: '1.1rem', color: '#00ffcc', textShadow: '0 0 10px #00ffcc, 0 0 20px #00ffcc' },
+    props: { content: 'Glow Neon', size: 52, weight: '700', color: '#00FFCC', font: 'Instrument Sans', glow: { enabled: true, color: '#00FFCC', blur: 12, intensity: 3 } },
+  },
+  {
+    label: 'Outlined',
+    preview: { fontWeight: '700', fontSize: '1.1rem', color: 'transparent', WebkitTextStroke: '1px #fff' },
+    props: { content: 'Outlined', size: 56, weight: '700', color: '#FFFFFF', font: 'Instrument Sans', outline: { enabled: true, color: '#FFFFFF', width: 2 } },
+  },
+  {
+    label: 'Shadow Pop',
+    preview: { fontWeight: '700', fontSize: '1.1rem', color: '#fff', textShadow: '3px 3px 0 #000' },
+    props: { content: 'Shadow Pop', size: 56, weight: '700', color: '#FFFFFF', font: 'Instrument Sans', shadow: { enabled: true, color: '#000000', blur: 0, offsetX: 4, offsetY: 4 } },
+  },
+  {
+    label: 'Badge Text',
+    preview: { fontWeight: '600', fontSize: '0.75rem', color: '#fff', background: '#5C6AC4', padding: '2px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '2px' },
+    props: { content: 'BADGE', size: 20, weight: '600', color: '#FFFFFF', font: 'Instrument Sans', textTransform: 'uppercase', letterSpacing: 3, textBg: { enabled: true, color: '#5C6AC4', padding: 10 } },
+  },
+  {
+    label: 'Elegant Serif',
+    preview: { fontWeight: '400', fontSize: '1.1rem', color: '#f0e6d3', fontFamily: 'Georgia, serif', fontStyle: 'italic' },
+    props: { content: 'Elegant Serif', size: 52, weight: '400', color: '#F0E6D3', font: 'Playfair Display', italic: true },
+  },
+  {
+    label: 'Code Mono',
+    preview: { fontWeight: '400', fontSize: '0.85rem', color: '#a8e6cf', fontFamily: 'monospace', background: '#1e1e2e', padding: '2px 8px', borderRadius: '4px' },
+    props: { content: 'console.log()', size: 28, weight: '400', color: '#A8E6CF', font: 'JetBrains Mono', textBg: { enabled: true, color: '#1E1E2E', padding: 12 } },
+  },
+  {
+    label: 'Highlight',
+    preview: { fontWeight: '600', fontSize: '1rem', color: '#1a1a2e', background: '#ffd700', padding: '2px 6px' },
+    props: { content: 'Highlighted', size: 40, weight: '600', color: '#1A1A2E', font: 'Instrument Sans', textBg: { enabled: true, color: '#FFD700', padding: 10 } },
+  },
+  {
+    label: 'Strikethrough',
+    preview: { fontWeight: '400', fontSize: '1rem', color: '#999', textDecoration: 'line-through' },
+    props: { content: 'Strikethrough', size: 36, weight: '400', color: '#999999', font: 'Instrument Sans', textDecoration: 'line-through' },
+  },
+  {
+    label: 'Uppercase Bold',
+    preview: { fontWeight: '700', fontSize: '0.9rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '4px' },
+    props: { content: 'UPPERCASE BOLD', size: 44, weight: '700', color: '#FFFFFF', font: 'Montserrat', textTransform: 'uppercase', letterSpacing: 6 },
+  },
+];
+
+function applyStyleTemplate(template) {
+  const { selectedElementId, updateElementWithHistory, addElement, elements } = useEditorStore.getState();
+  if (selectedElementId) {
+    const el = elements.find(e => e.id === selectedElementId && e.type === 'text');
+    if (el) {
+      updateElementWithHistory(selectedElementId, template.props);
+      return;
+    }
+  }
+  addElement({
+    id: 'text-' + Date.now(),
+    type: 'text',
+    textAlign: 'center',
+    letterSpacing: 0,
+    shadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 },
+    outline: { enabled: false, color: '#000000', width: 1 },
+    textDecoration: 'none',
+    textTransform: 'none',
+    wordSpacing: 0,
+    maxWidth: 0,
+    gradient: { enabled: false, start: '#5C6AC4', end: '#202E78', angle: 135 },
+    glow: { enabled: false, color: '#5C6AC4', blur: 10, intensity: 2 },
+    rotation: 0,
+    x: 800,
+    y: 100,
+    zIndex: elements.length,
+    ...template.props,
+  });
+}
 
 function TextToolContent() {
   const addText = useEditorStore((s) => s.addText);
@@ -50,6 +146,12 @@ function TextToolContent() {
                   letterSpacing: 0,
                   shadow: { enabled: false, color: '#000000', blur: 4, offsetX: 2, offsetY: 2 },
                   outline: { enabled: false, color: '#000000', width: 1 },
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                  wordSpacing: 0,
+                  maxWidth: 0,
+                  gradient: { enabled: false, start: '#5C6AC4', end: '#202E78', angle: 135 },
+                  glow: { enabled: false, color: '#5C6AC4', blur: 10, intensity: 2 },
                   rotation: 0,
                   x: 800,
                   y: 100,
@@ -64,6 +166,21 @@ function TextToolContent() {
           ))}
         </div>
       </div>
+      <div className="tool-panel__section">
+        <span className="form-label">Mẫu văn bản</span>
+        <div className="tool-panel__presets">
+          {TEXT_STYLE_TEMPLATES.map((t) => (
+            <button
+              key={t.label}
+              className="tool-panel__preset-btn"
+              onClick={() => applyStyleTemplate(t)}
+              title={t.label}
+            >
+              <span style={t.preview}>{t.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -71,23 +188,52 @@ function TextToolContent() {
 function ShapeToolContent() {
   const addShape = useEditorStore((s) => s.addShape);
 
-  const shapeTypes = [
-    { type: 'rectangle', icon: <RectIcon />, label: 'Hình chữ nhật' },
-    { type: 'circle', icon: <CircleIcon />, label: 'Hình tròn' },
-    { type: 'arrow', icon: <ArrowIcon />, label: 'Mũi tên' },
-    { type: 'badge', icon: <BadgeIcon />, label: 'Badge' },
+  const categories = [
+    {
+      label: 'Cơ bản',
+      shapes: [
+        { type: 'rectangle', icon: <RectIcon />, label: 'Chữ nhật' },
+        { type: 'circle', icon: <CircleIcon />, label: 'Hình tròn' },
+        { type: 'triangle', icon: <TriangleIcon />, label: 'Tam giác' },
+        { type: 'diamond', icon: <DiamondIcon />, label: 'Kim cương' },
+      ],
+    },
+    {
+      label: 'Đa giác',
+      shapes: [
+        { type: 'pentagon', icon: <PentagonIcon />, label: 'Ngũ giác' },
+        { type: 'hexagon', icon: <HexagonIcon />, label: 'Lục giác' },
+        { type: 'star', icon: <StarIcon />, label: 'Ngôi sao' },
+        { type: 'cross', icon: <CrossIcon />, label: 'Chữ thập' },
+      ],
+    },
+    {
+      label: 'Đặc biệt',
+      shapes: [
+        { type: 'arrow', icon: <ArrowIcon />, label: 'Mũi tên' },
+        { type: 'line', icon: <LineIcon />, label: 'Đường thẳng' },
+        { type: 'callout', icon: <CalloutBubbleIcon />, label: 'Callout' },
+        { type: 'heart', icon: <HeartIcon />, label: 'Trái tim' },
+        { type: 'badge', icon: <BadgeIcon />, label: 'Badge' },
+      ],
+    },
   ];
 
   return (
     <div className="tool-panel__body">
-      <div className="tool-panel__grid tool-panel__grid--2col">
-        {shapeTypes.map((s) => (
-          <button key={s.type} className="tool-panel__grid-item" onClick={() => addShape(s.type)} title={s.label}>
-            {s.icon}
-            <span>{s.label}</span>
-          </button>
-        ))}
-      </div>
+      {categories.map((cat) => (
+        <div key={cat.label} className="tool-panel__section">
+          <span className="form-label">{cat.label}</span>
+          <div className="tool-panel__grid tool-panel__grid--2col">
+            {cat.shapes.map((s) => (
+              <button key={s.type} className="tool-panel__grid-item" onClick={() => addShape(s.type)} title={s.label}>
+                {s.icon}
+                <span>{s.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
